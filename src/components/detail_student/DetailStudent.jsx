@@ -1,6 +1,6 @@
 import { Menu, MenuItem } from '@mui/material';
 import React, { useState } from 'react';
-import { MdDeleteForever, MdEdit, MdMenuBook, MdOutlineMoreHoriz, MdOutlineRemoveRedEye } from 'react-icons/md';
+import { MdDeleteForever, MdEdit, MdFileDownload, MdMenuBook, MdOutlineMoreHoriz, MdOutlineRemoveRedEye } from 'react-icons/md';
 // import { useParams } from 'react-router-dom';
 import avatarSrc from "../../assets/avatar.webp";
 import ModalConfirm from '../../shared/modal_confirm/ModalConfirm';
@@ -26,6 +26,10 @@ const DetailStudent = () => {
 
     const handleClickOpenUpdateEvaluate = (isOpen) => {
         setIsOpenFormEvaluate(isOpen);
+        handleClose();
+    }
+
+    const handleDownloadReportFile = () => {
         handleClose();
     }
 
@@ -70,6 +74,9 @@ const DetailStudent = () => {
                         </MenuItem>
                         <MenuItem onClick={() => handleClickOpenUpdateEvaluate(true)}>
                             <div className='flex'><MdOutlineRemoveRedEye size={25} className='text-primary' /> <div className='px-4'>Update Result</div></div>
+                        </MenuItem>
+                        <MenuItem onClick={handleDownloadReportFile}>
+                            <div className='flex'><MdFileDownload size={25} className='text-primary' /> <div className='px-4'>Download Report File</div></div>
                         </MenuItem>
                         <MenuItem onClick={() => handleClickToggleModalConfirmDelete(true)}>
                             <div className='flex'><MdDeleteForever size={25} className='text-red-500' /> <div className='px-4'>Delete</div></div>

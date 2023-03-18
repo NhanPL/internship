@@ -1,20 +1,39 @@
 import https from "../https/httpHandle";
-import * as APIContants from "../constant/APIContanst";
+import { ConstanstAPI } from "../constant/APIContanst";
 
 const AuthService = {
     login: async (username, password) => {
         try {
             const payload = { username, password };
             const result = await https({
-                method: APIContants.LOGIN.method,
-                url: APIContants.LOGIN.url,
+                method: ConstanstAPI.LOGIN.method,
+                url: ConstanstAPI.LOGIN.url,
                 data: payload
             });
-            return { status: 200, data: result };
+            return result;
         } catch (err) {
             return { status: err.response.status, data: err.response.data?.message }
         }
-    }
+    },
+    getInfoStudent: async (id) => {
+        try {
+            const result = await https.get(ConstanstAPI.INFO_ACCOUNT_STUDENT.url + '/' + id);
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
+    getInfoTeacher: async (id) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.INFO_ACCOUNT_TEACHER.method,
+                url: ConstanstAPI.INFO_ACCOUNT_TEACHER.url + '/' + id,
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
 }
 
 export default AuthService;

@@ -4,10 +4,12 @@ import {
     BrowserRouter as Router, Route, Routes
 } from "react-router-dom";
 import DetailStudent from '../components/detail_student/DetailStudent';
+import DetailTeacher from '../components/detail_teacher/DetailTeacher';
 import ForgetPassword from '../components/forget_password/ForgetPassword';
 import GlobalNavigation from '../components/global_navigation/GlobalNavigation';
 import Home from '../components/home/Home';
 import InfoDetail from '../components/info_detail/InfoDetail';
+import ListInternship from '../components/list_internship/ListInternship';
 import ListStudent from '../components/list_student/ListStudent';
 import ListTeacher from '../components/list_teacher/ListTeacher';
 import Login from '../components/login/Login';
@@ -31,6 +33,8 @@ function RouterComponent() {
                 <Route path='/list-student' element={<ListStudent />}></Route>
                 <Route path='/list-student/detail/:id' element={<DetailStudent />}></Route>
                 <Route path='/teacher' element={<ListTeacher />}></Route>
+                <Route path='/list-teacher/detail/:id' element={<DetailTeacher />}></Route>
+                <Route path='/internship' element={<ListInternship />}></Route>
             </Route>
         )
     }

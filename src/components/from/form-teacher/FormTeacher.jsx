@@ -10,7 +10,7 @@ const schema = yup.object({
 
 }).required();
 
-const FormStudent = ({ isOpen, handleClose }) => {
+const FormTeacher = ({ isOpen, handleClose }) => {
     useEffect(() => {
         if(isOpen=== false) {
             setSrcAvatar(avatar);
@@ -44,7 +44,7 @@ const FormStudent = ({ isOpen, handleClose }) => {
     return (
         <Dialog open={isOpen} onClose={handleClose} fullWidth maxWidth="md">
             <div className='w-full flex flex-col overflow-auto'>
-                <h2 className='modal-from-header mt-5'>Add Student</h2>
+                <h2 className='modal-from-header mt-5'>Add Teacher</h2>
                 <div className='overflow-auto h-full'>
                     <form className='w-full p-6'>
                         <div className='pb-4 w-full'>
@@ -129,9 +129,9 @@ const FormStudent = ({ isOpen, handleClose }) => {
                         <div className='pb-4 w-full'>
                             <Controller
                                 control={control}
-                                name="class"
+                                name="level"
                                 render={({ field }) => (
-                                    <TextField size='small' className='w-full' label="Class name:" variant="outlined" {...field} />
+                                    <TextField size='small' className='w-full' label="Level:" variant="outlined" {...field} />
                                 )}
                             />
                             <p className='text-red-600'>{errors.password?.message}</p>
@@ -140,9 +140,9 @@ const FormStudent = ({ isOpen, handleClose }) => {
                         <div className='pb-4 w-full'>
                             <Controller
                                 control={control}
-                                name="course"
+                                name="salary"
                                 render={({ field }) => (
-                                    <TextField size='small' className='w-full' label="Course:" variant="outlined" {...field} />
+                                    <TextField size='small' className='w-full' label="Salary:" variant="outlined" {...field} />
                                 )}
                             />
                             <p className='text-red-600'>{errors.password?.message}</p>
@@ -152,7 +152,7 @@ const FormStudent = ({ isOpen, handleClose }) => {
                                 control={control}
                                 name="deparment"
                                 render={({ field }) => (
-                                    <TextField size='small' className='w-full' label="Deparment:" variant="outlined" {...field} />
+                                    <TextField size='small' className='w-full' label="Speliaze:" variant="outlined" {...field} />
                                 )}
                             />
                             <p className='text-red-600'>{errors.password?.message}</p>
@@ -169,4 +169,4 @@ const FormStudent = ({ isOpen, handleClose }) => {
     )
 }
 
-export default FormStudent;
+export default FormTeacher;

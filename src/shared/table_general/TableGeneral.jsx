@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react';
+import "./TableGeneral.scss";
 
 const TableGeneral = ({ headers, body }) => {
     return (
-        <div className="w-full h-full overflow-auto table-student">
+        <div className="w-full h-full overflow-auto table-general">
             <table className='w-full'>
                 <thead>
                     <tr>

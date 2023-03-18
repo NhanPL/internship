@@ -19,9 +19,9 @@ const schema = yup.object({
         .required('Please enter a MSSV!'),
     password: yup
         .string()
-        .required('Please enter a password!')
-        .min(7, "Passwords are 7 - 20 characters in length!")
-        .max(20, "Passwords are 7 - 20 characters in length!"),
+        .required('Please enter a password!'),
+        // .min(7, "Passwords are 7 - 20 characters in length!")
+        // .max(20, "Passwords are 7 - 20 characters in length!"),
 }).required();
 
 const Login = () => {

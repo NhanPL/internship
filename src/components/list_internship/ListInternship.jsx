@@ -4,14 +4,14 @@ import { MdAdd, MdDeleteForever, MdEdit, MdOutlineMoreHoriz, MdOutlineRemoveRedE
 import { useNavigate } from 'react-router-dom';
 import ModalConfirm from '../../shared/modal_confirm/ModalConfirm';
 import TableGeneral from '../../shared/table_general/TableGeneral';
-import FormTeacher from '../from/form-teacher/FormTeacher';
-import './ListTeacher.scss';
+import FormInternship from '../from/form-internship/FormInternship';
+import './ListInternship.scss';
 
-const ListTeacher = () => {
+const ListInternship = () => {
     const [page, setPage] = useState(1);
     const [idTeacher, setIdTeacher] = useState(null);
     const [isOpenModalConfirmDelete, setIsOpenModalConfirmDelete] = useState(false);
-    const [isOpenModalAddTeacher, setIsOpenModalAddTeacher] = useState(false);
+    const [isOpenModalAddInternship, setIsOpenModalAddInternship] = useState(false);
 
     const navigate = useNavigate();
 
@@ -30,12 +30,12 @@ const ListTeacher = () => {
 
     const showModalAddStudent = () => {
         handleClose();
-        setIsOpenModalAddTeacher(true);
+        setIsOpenModalAddInternship(true);
     }
 
     const closeModalAddStudent = () => {
         setIdTeacher(null);
-        setIsOpenModalAddTeacher(false);
+        setIsOpenModalAddInternship(false);
     }
 
     const handleConfirmDeleteStudent = () => {
@@ -87,7 +87,7 @@ const ListTeacher = () => {
         <div className='w-full h-full p-5 overflow-hidden'>
             <div className="w-full h-full bg-white rounded shadow overflow-hidden">
                 <div className='flex bg-gray-700 justify-between shadow-md items-center shadow-gray-200 pr-4'>
-                    <h2 className='text-white font-bold text-3xl pb-1 pl-5 uppercase'>List Teacher</h2>
+                    <h2 className='text-white font-bold text-3xl pb-1 pl-5 uppercase'>List Internship</h2>
                     <MdAdd onClick={showModalAddStudent} size={25} className='text-white hover:cursor-pointer hover:bg-gray-200 rounded-full' />
                 </div>
                 <div className="h-full w-full body-content overflow-hidden">
@@ -124,8 +124,8 @@ const ListTeacher = () => {
                 content="Do you want to delete this student?"
                 handleConfirm={deleteStudent}
                 handleClose={handleCloseModalConfirmDelete} />
-            <FormTeacher
-                isOpen={isOpenModalAddTeacher}
+            <FormInternship
+                isOpen={isOpenModalAddInternship}
                 idTeacher={idTeacher}
                 handleClose={closeModalAddStudent}
             />
@@ -133,4 +133,4 @@ const ListTeacher = () => {
     )
 }
 
-export default ListTeacher
+export default ListInternship

@@ -112,7 +112,7 @@ const ListStudent = () => {
                         <TextField className='w-full' label="Name:" variant="outlined" />
                         <TextField className='w-full' label="Class:" variant="outlined" />
                         <TextField className='w-full' label="School year:" variant="outlined" />
-                        <TextField className='w-full' label=":" variant="outlined" />
+                        <button className='btn btn-primary w-[420px] text-xl'>Search</button>
                     </div>
                     <div className='px-10 w-full h-[430px] overflow-hidden'>
                         <TableGeneral headers={headers} body={renderDataTable()} />

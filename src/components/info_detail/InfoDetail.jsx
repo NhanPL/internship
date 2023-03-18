@@ -1,58 +1,103 @@
-import React from 'react';
-import avatarSrc from "../../assets/avatar.jpg";
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import AuthService from "../../services/AuthService";
 
 const InfoDetail = () => {
+
+    const { id, role } = useSelector((state) => state.auth);
+    const [info, setInfo] = useState({});
+
+    useEffect(() => {
+        const fetchDataInfo = async () => {
+            let result = {};
+            if (role === "STUDENT") {
+                result = await AuthService.getInfoStudent(id);
+            } else {
+                result = await AuthService.getInfoTeacher(id);
+            }
+            setInfo(result.data);
+        };
+
+        fetchDataInfo();
+    }, [id, role])
+
     return (
         <div className='w-full h-full p-5'>
             <div className="w-full h-full bg-white rounded shadow overflow-hidden">
                 <h2 className='text-white font-bold text-3xl bg-gray-700 pb-1 pl-5 shadow-md shadow-gray-200 uppercase'>Info Detail</h2>
                 <div className="h-full body-content flex">
                     <div className='w-1/3 h-full pt-8 pl-20'>
-                        <img src={avatarSrc} alt="Avatar Account" className='w-[425px] h-[525px]' />
+                        <img src={info?.avatar} alt="Avatar Account" className='w-[425px] h-[525px]' />
                     </div>
                     <div className='w-2/3 h-full pt-8 pl-5 pr-5'>
                         <div className='bg-gray-700 text-center text-white font-bold text-xl mb-2'>Info</div>
                         <div className='grid grid-cols-2 mb-4 px-4'>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>ID:</div>
-                                <p>A000001</p>
+                                <p>SV{info?.id}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Full Name:</div>
-                                <p>Dao Van Nhan</p>
+                                <p>{info?.name}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Gmail:</div>
-                                <p>test123@gmail.com</p>
+                                <p>{info?.email}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Gender:</div>
-                                <p>Male</p>
+                                <p>{info?.sex}</p>
                             </div>
                             <div className='flex text-lg py-2'>
                                 <div className='w-28 font-bold'>Birth Day:</div>
-                                <p>20/02/1999</p>
+                                <p>{info?.birthDay}</p>
                             </div>
                             <div className='flex text-lg py-2'>
                                 <div className='w-28 font-bold'>Phone:</div>
-                                <p>0355884887</p>
+                                <p>{info?.phone}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Address:</div>
-                                <p>28 - Lê Lợi - Ninh Kiều - Cần Thơ</p>
+                                <p>{info?.address}</p>
                             </div>
                         </div>
-                        <div className='bg-gray-700 text-center text-white font-bold text-xl mb-2'>Class</div>
-                        <div className='grid grid-cols-2 mb-4 px-4'>
-                            <div className='flex text-lg py-2'>
-                                <div className='w-28 font-bold'>Class:</div>
-                                <p>DI017V2</p>
-                            </div>
-                            <div className='flex text-lg py-2'>
-                                <div className='w-28 font-bold'>School year:</div>
-                                <p>2000</p>
-                            </div>
-                        </div>
+                        {role === "STUDENT" ?
+                            (<>
+                                <div className='bg-gray-700 text-center text-white font-bold text-xl mb-2'>Class</div>
+                                <div className='grid grid-cols-2 mb-4 px-4'>
+                                    <div className='flex text-lg py-2'>
+                                        <div className='w-28 font-bold'>Class:</div>
+                                        <p>{info?.class_}</p>
+                                    </div>
+                                    <div className='flex text-lg py-2'>
+                                        <div className='w-28 font-bold'>School year:</div>
+                                        <p>{info?.yearStudy}</p>    
+                                    </div>
+                                    <div className='flex text-lg py-2'>
+                                        <div className='w-28 font-bold'>Department:</div>
+                                        <p>{info?.department}</p>
+                                    </div>
+                                </div>
+                            </>)
+                            :
+                            (<>
+                                <div className='bg-gray-700 text-center text-white font-bold text-xl mb-2'>More</div>
+                                <div className='grid grid-cols-2 mb-4 px-4'>
+                                    <div className='flex text-lg py-2'>
+                                        <div className='w-28 font-bold'>Level:</div>
+                                        <p>{info?.level}</p>
+                                    </div>
+                                    <div className='flex text-lg py-2'>
+                                        <div className='w-28 font-bold'>Specialize:</div>
+                                        <p>{info?.specialize}</p>    
+                                    </div>
+                                    <div className='flex text-lg py-2'>
+                                        <div className='w-28 font-bold'>Salary:</div>
+                                        <p>{info?.salary} VND</p>
+                                    </div>
+                                </div>
+                            </>)
+                        }
                     </div>
                 </div>
             </div>
