@@ -1,19 +1,40 @@
 import { Menu, MenuItem, Pagination, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdAdd, MdDeleteForever, MdEdit, MdOutlineMoreHoriz, MdOutlineRemoveRedEye } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
+import StudentService from '../../services/StudentService';
 import ModalConfirm from '../../shared/modal_confirm/ModalConfirm';
 import TableGeneral from '../../shared/table_general/TableGeneral';
 import FormStudent from '../from/form-student/FormStudent';
+import Loading from '../../shared/loading/Loading';
 import './ListStudent.scss';
 
 const ListStudent = () => {
     const [page, setPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
+    const [students, setStudents] = useState([]);
+    const [student, setStudent] = useState({});
     const [idStudent, setIdStudent] = useState(null);
     const [isOpenModalConfirmDelete, setIsOpenModalConfirmDelete] = useState(false);
     const [isOpenModalAddStudent, setIsOpenModalAddStudent] = useState(false);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleGetData = async () => {
+            const studentResult = await StudentService.getListStudent();
+            if (studentResult.status === 200) {
+                const data = studentResult.data.map((student) => ({
+                    ...student.internship,
+                    idInternship: student.internship?.id,
+                    ...student.students,
+                }))
+                setStudents(data);
+                setIsLoading(false);
+            }
+        }
+        handleGetData();
+    }, [isOpenModalAddStudent]);
 
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -33,8 +54,16 @@ const ListStudent = () => {
         setIsOpenModalAddStudent(true);
     }
 
+    const showModalUpdateStudent = () => {
+        const filterStudent = students.find(({id}) => id === idStudent);
+        setStudent(filterStudent);
+        handleClose();
+        setIsOpenModalAddStudent(true);
+    }
+
     const closeModalAddStudent = () => {
         setIdStudent(null);
+        setStudent({});
         setIsOpenModalAddStudent(false);
     }
 
@@ -44,8 +73,8 @@ const ListStudent = () => {
     }
 
     const handleViewDetailStudent = () => {
-        if(idStudent){
-            navigate("/list-student/detail/"+idStudent);
+        if (idStudent) {
+            navigate("/list-student/detail/" + idStudent);
         }
     }
 
@@ -58,32 +87,17 @@ const ListStudent = () => {
     }
 
     const headers = ["MSSV", "Full Name", "Email", "Gender", "Phone Number", "Class", "Course", "Start Day", "End Day", "Action"];
-    const students = [
-        { id: 1, mssv: "A000001", name: "Dao Van Nhan Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 2, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 3, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 4, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 5, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 6, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 7, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 8, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 9, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 10, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 11, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 12, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-        { id: 13, mssv: "A000001", name: "Dao Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", class: "DI17V7A2", schoolYear: "K38", startDay: "2023-02-01", endDay: "2023-05-30", status: "" },
-    ];
 
     const renderDataTable = () => {
         return students.map(student => {
             return {
-                mssv: <span className='font-bold'>{student.mssv}</span>,
-                name: student.name,
+                mssv: <span className='font-bold'>SV{student.id}</span>,
+                name: student.fullname,
                 email: student.email,
-                gender: student.gender === 'Male' ? <span className='font-bold text-primary'>{student.gender}</span> : <span className='font-bold text-purple-700'>{student.gender}</span>,
+                gender: student.sex === 'Male' ? <span className='font-bold text-primary'>{student.sex}</span> : <span className='font-bold text-purple-700'>{student.sex}</span>,
                 phone: student.phone,
-                class: student.class,
-                schoolYear: student.schoolYear,
+                class: student.className,
+                schoolYear: student.year_study,
                 startDay: student.startDay,
                 endDay: student.endDay,
                 status: (
@@ -101,6 +115,7 @@ const ListStudent = () => {
 
     return (
         <div className='w-full h-full p-5 overflow-hidden'>
+            {isLoading && <Loading />}
             <div className="w-full h-full bg-white rounded shadow overflow-hidden">
                 <div className='flex bg-gray-700 justify-between shadow-md items-center shadow-gray-200 pr-4'>
                     <h2 className='text-white font-bold text-3xl pb-1 pl-5 uppercase'>List Student</h2>
@@ -128,7 +143,7 @@ const ListStudent = () => {
                 <MenuItem onClick={handleViewDetailStudent}>
                     <div className='flex'><MdOutlineRemoveRedEye size={25} className='text-primary' /> <div className='w-20 px-4'>Detail</div></div>
                 </MenuItem>
-                <MenuItem onClick={showModalAddStudent}>
+                <MenuItem onClick={showModalUpdateStudent}>
                     <div className='flex'><MdEdit size={25} className='text-yellow-700' /> <div className='w-20 px-4'>Update</div></div>
                 </MenuItem>
                 <MenuItem onClick={handleConfirmDeleteStudent}>
@@ -140,11 +155,14 @@ const ListStudent = () => {
                 content="Do you want to delete this student?"
                 handleConfirm={deleteStudent}
                 handleClose={handleCloseModalConfirmDelete} />
-            <FormStudent
-                isOpen={isOpenModalAddStudent}
-                idStudent={idStudent}
-                handleClose={closeModalAddStudent}
-            />
+            {
+                isOpenModalAddStudent && <FormStudent
+                    isOpen={isOpenModalAddStudent}
+                    idStudent={idStudent}
+                    student={student}
+                    handleClose={closeModalAddStudent}
+                />
+            }
         </div>
     )
 }

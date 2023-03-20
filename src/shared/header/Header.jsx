@@ -56,7 +56,7 @@ const Header = () => {
             <div className='text-xl text-primary font-bold pl-5'>Internship Management System</div>
             <div className='flex px-5' onClick={handleClick}>
                 <div>
-                    <img src={imgUrl ?? AvatarManager} alt="Avatar" width={30} height={30} className="rounded-full" />
+                    <img src={imgUrl || AvatarManager} alt="Avatar" width={30} height={30} className="rounded-full" />
                 </div>
                 <span className='pl-2'>{name}</span>
                 <div><MdOutlineExpandMore size={30} /></div>
@@ -77,7 +77,7 @@ const Header = () => {
                 handleClose={() => setIsOpenConfirm(false)}
                 handleConfirm={logoutAccount}
             />
-            <FormChangePassword isOpen={isOpenModalChangePassword} handleClose={handleCloseModalChangePassword} />
+            {isOpenModalChangePassword && <FormChangePassword isOpen={isOpenModalChangePassword} handleClose={handleCloseModalChangePassword} />}
         </div>
     )
 }

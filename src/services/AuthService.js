@@ -15,6 +15,19 @@ const AuthService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
+    changePassword: async (username, password, newPassword) => {
+        try {
+            const payload = { username, password, newPassword };
+            const result = await https({
+                method: ConstanstAPI.CHANGE_PASSWORD.method,
+                url: ConstanstAPI.CHANGE_PASSWORD.url,
+                data: payload
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
     getInfoStudent: async (id) => {
         try {
             const result = await https.get(ConstanstAPI.INFO_ACCOUNT_STUDENT.url + '/' + id);

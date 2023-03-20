@@ -4,7 +4,6 @@ const https = axios.create();
 
 // Add a request interceptor
 https.interceptors.request.use(function (config) {
-    // Do something before request is sent
     const token = localStorage.getItem("token");
     const newConfig = config;
     newConfig.headers = {

@@ -5,8 +5,8 @@ const StudentService = {
     getListStudent: async () => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_STUDENT.method,
-                url: ConstanstAPI.INFO_STUDENT.url,
+                method: ConstanstAPI.GET_LIST_STUDENT.method,
+                url: ConstanstAPI.GET_LIST_STUDENT.url,
             });
             return result;
         } catch (err) {
@@ -28,8 +28,8 @@ const StudentService = {
     createStudent: async (data) => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_STUDENT.method,
-                url: ConstanstAPI.INFO_STUDENT.url,
+                method: ConstanstAPI.INSERT_STUDENT.method,
+                url: ConstanstAPI.INSERT_STUDENT.url,
                 data: data
             });
             return result;
@@ -67,8 +67,8 @@ const StudentService = {
     updateStudent: async (id, data) => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_STUDENT.method,
-                url: ConstanstAPI.INFO_STUDENT.url + '/' + id,
+                method: ConstanstAPI.UPDATE_STUDENT.method,
+                url: ConstanstAPI.UPDATE_STUDENT.url + '/' + id,
                 data: data
             });
             return result;

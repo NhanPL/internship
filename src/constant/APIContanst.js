@@ -3,29 +3,21 @@ export const ConstanstAPI = {
         url: "http://localhost:8080/auth/login",
         method: "POST"
     },
-    INFO_ACCOUNT_STUDENT: {
-        url: "http://localhost:8080/student",
+    CHANGE_PASSWORD: {
+        url: "http://localhost:8080/auth/password",
+        method: "POST"
+    },
+    GET_LIST_STUDENT: {
+        url: "http://localhost:8080/manager/liststudent",
         method: "GET"
     },
-    INFO_ACCOUNT_TEACHER: {
-        url: "http://localhost:8080/teacher",
-        method: "GET"
+    INSERT_STUDENT: {
+        url: "http://localhost:8080/manager/student",
+        method: "POST"
     },
-    LIST_STUDENT: {
-        url: "http://localhost:8080/stutent/list",
-        method: "GET"
+    UPDATE_STUDENT: {
+        url: "http://localhost:8080/student/update",
+        method: "PUT"
     },
-    INFO_STUDENT: {
-        url: "http://localhost:8080/student",
-        method: "GET"
-    },
-    LIST_TEACHER: {
-        url: "http://localhost:8080/manager/teacher",
-        method: "GET"
-    },
-    INFO_TEACHER: {
-        url: "http://localhost:8080/teacher",
-        method: "GET"
-    }
 }
 
