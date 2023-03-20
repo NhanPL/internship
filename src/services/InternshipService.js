@@ -5,8 +5,8 @@ const InternshipService = {
     getListInternship: async () => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_TEACHER.method,
-                url: ConstanstAPI.INFO_TEACHER.url,
+                method: ConstanstAPI.GET_LIST_INTERNSHIP.method,
+                url: ConstanstAPI.GET_LIST_INTERNSHIP.url,
             });
             return result;
         } catch (err) {

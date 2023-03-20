@@ -1,14 +1,18 @@
 import { Menu, MenuItem } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdDeleteForever, MdEdit, MdFileDownload, MdMenuBook, MdOutlineMoreHoriz, MdOutlineRemoveRedEye } from 'react-icons/md';
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import avatarSrc from "../../assets/avatar.webp";
 import ModalConfirm from '../../shared/modal_confirm/ModalConfirm';
 import FormEvaluate from '../from/form-evaluate/FormEvaluate';
 import FormStudentIntern from '../from/form-student-intern/FormStudentIntern';
-import FormStudent from '../from/form-student/FormStudent';
+// import FormStudent from '../from/form-student/FormStudent';
+import StudentService from '../../services/StudentService';
+import Loading from '../../shared/loading/Loading';
 
 const DetailStudent = () => {
+    const { id } = useParams();
+    const [isLoading, setIsLoading] = useState(true);
     const [isOpenFormStudent, setIsOpenFormStudent] = useState(false);
     const [isOpenFormStudentInternship, setIsOpenFormStudentInternship] = useState(false);
     const [isOpenFormEvaluate, setIsOpenFormEvaluate] = useState(false);
@@ -38,7 +42,6 @@ const DetailStudent = () => {
         handleClose();
     }
 
-    // const {id} = useParams();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -54,6 +57,21 @@ const DetailStudent = () => {
     const deleteStudent = () => {
         console.log("Delete");
     }
+
+    useEffect(() => {
+        const getInfoStudent = async () => {
+            try {
+                const resStudent = await StudentService.getInfoStudent(id);
+                console.log(resStudent);
+            } catch (error) {
+
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        getInfoStudent();
+    }, [id])
 
     return (
         <div className='w-full h-full p-5 overflow-hidden'>
@@ -183,7 +201,7 @@ const DetailStudent = () => {
                     </div>
                 </div>
             </div>
-            <FormStudent isOpen={isOpenFormStudent} handleClose={() => handleClickOpenUpdateStudent(false)} />
+            {/* <FormStudent isOpen={isOpenFormStudent} handleClose={() => handleClickOpenUpdateStudent(false)} /> */}
             <FormStudentIntern isOpen={isOpenFormStudentInternship} handleClose={() => handleClickOpenUpdateStudentInternship(false)} />
             <FormEvaluate isOpen={isOpenFormEvaluate} handleClose={() => handleClickOpenUpdateEvaluate(false)} />
             <ModalConfirm
@@ -191,6 +209,7 @@ const DetailStudent = () => {
                 content="Do you want to delete this student?"
                 handleConfirm={deleteStudent}
                 handleClose={() => handleClickToggleModalConfirmDelete(false)} />
+            {isLoading && <Loading />}
         </div>
     )
 }

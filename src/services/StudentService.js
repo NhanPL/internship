@@ -16,8 +16,8 @@ const StudentService = {
     getInfoStudent: async (id) => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_STUDENT.method,
-                url: ConstanstAPI.INFO_STUDENT.url + '/' + id,
+                method: ConstanstAPI.GET_INFO_STUDENT.method,
+                url: ConstanstAPI.GET_INFO_STUDENT.url + '/' + id,
                 data: {}
             });
             return result;

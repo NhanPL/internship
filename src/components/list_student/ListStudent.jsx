@@ -7,11 +7,15 @@ import ModalConfirm from '../../shared/modal_confirm/ModalConfirm';
 import TableGeneral from '../../shared/table_general/TableGeneral';
 import FormStudent from '../from/form-student/FormStudent';
 import Loading from '../../shared/loading/Loading';
+import ModalAlert from '../../shared/modal-alert/ModalAlert';
 import './ListStudent.scss';
+
+const countElementInPage = 10;
 
 const ListStudent = () => {
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
+    const [objAlert, setObjAlert] = useState({ isOpen: false, message: '', type: null });
     const [students, setStudents] = useState([]);
     const [student, setStudent] = useState({});
     const [idStudent, setIdStudent] = useState(null);
@@ -22,14 +26,19 @@ const ListStudent = () => {
 
     useEffect(() => {
         const handleGetData = async () => {
-            const studentResult = await StudentService.getListStudent();
-            if (studentResult.status === 200) {
-                const data = studentResult.data.map((student) => ({
-                    ...student.internship,
-                    idInternship: student.internship?.id,
-                    ...student.students,
-                }))
-                setStudents(data);
+            try {
+                const studentResult = await StudentService.getListStudent();
+                if (studentResult.status === 200) {
+                    const data = studentResult.data.map((student) => ({
+                        ...student.internship,
+                        idInternship: student.internship?.id,
+                        ...student.students,
+                    }))
+                    setStudents(data);
+                }
+            } catch (error) {
+                setObjAlert({ isOpen: true, message: error.message, type: "error" });
+            } finally {
                 setIsLoading(false);
             }
         }
@@ -49,13 +58,17 @@ const ListStudent = () => {
         setAnchorEl(null);
     };
 
+    const handleCloseAlert = () => {
+        setObjAlert({ isOpen: false, message: '' });
+    };
+
     const showModalAddStudent = () => {
         handleClose();
         setIsOpenModalAddStudent(true);
     }
 
     const showModalUpdateStudent = () => {
-        const filterStudent = students.find(({id}) => id === idStudent);
+        const filterStudent = students.find(({ id }) => id === idStudent);
         setStudent(filterStudent);
         handleClose();
         setIsOpenModalAddStudent(true);
@@ -89,7 +102,7 @@ const ListStudent = () => {
     const headers = ["MSSV", "Full Name", "Email", "Gender", "Phone Number", "Class", "Course", "Start Day", "End Day", "Action"];
 
     const renderDataTable = () => {
-        return students.map(student => {
+        return students.slice((page - 1) * countElementInPage, countElementInPage * page).map(student => {
             return {
                 mssv: <span className='font-bold'>SV{student.id}</span>,
                 name: student.fullname,
@@ -115,6 +128,7 @@ const ListStudent = () => {
 
     return (
         <div className='w-full h-full p-5 overflow-hidden'>
+            {objAlert.isOpen && <ModalAlert {...objAlert} handleClose={handleCloseAlert} />}
             {isLoading && <Loading />}
             <div className="w-full h-full bg-white rounded shadow overflow-hidden">
                 <div className='flex bg-gray-700 justify-between shadow-md items-center shadow-gray-200 pr-4'>
@@ -132,7 +146,7 @@ const ListStudent = () => {
                     <div className='px-10 w-full h-[430px] overflow-hidden'>
                         <TableGeneral headers={headers} body={renderDataTable()} />
                     </div>
-                    <div className='mt-2 px-10 flex justify-end'><Pagination onChange={handleChangePanigation} page={page} count={2} color="primary" showFirstButton showLastButton /></div>
+                    <div className='mt-2 px-10 flex justify-end'><Pagination onChange={handleChangePanigation} page={page} count={Math.ceil((students.length + 1) / countElementInPage)} color="primary" showFirstButton showLastButton /></div>
                 </div>
             </div>
             <Menu

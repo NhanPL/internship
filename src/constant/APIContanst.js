@@ -11,6 +11,10 @@ export const ConstanstAPI = {
         url: "http://localhost:8080/manager/liststudent",
         method: "GET"
     },
+    GET_INFO_STUDENT: {
+        url: "http://localhost:8080/student",
+        method: "GET"
+    },
     INSERT_STUDENT: {
         url: "http://localhost:8080/manager/student",
         method: "POST"
@@ -18,6 +22,10 @@ export const ConstanstAPI = {
     UPDATE_STUDENT: {
         url: "http://localhost:8080/student/update",
         method: "PUT"
+    },
+    GET_LIST_INTERNSHIP: {
+        url: "http://localhost:8080/student/internship/list",
+        method: "GET"
     },
 }
 
