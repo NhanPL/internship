@@ -1,7 +1,10 @@
 import { Menu, MenuItem, Pagination, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdAdd, MdDeleteForever, MdEdit, MdOutlineMoreHoriz, MdOutlineRemoveRedEye } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
+import TeacherService from '../../services/TeacherService';
+import Loading from '../../shared/loading/Loading';
+import ModalAlert from '../../shared/modal-alert/ModalAlert';
 import ModalConfirm from '../../shared/modal_confirm/ModalConfirm';
 import TableGeneral from '../../shared/table_general/TableGeneral';
 import FormTeacher from '../from/form-teacher/FormTeacher';
@@ -9,6 +12,10 @@ import './ListTeacher.scss';
 
 const ListTeacher = () => {
     const [page, setPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
+    const [teachers, setTeachers] = useState([]);
+    const [teacher, setTeacher] = useState({});
+    const [objAlert, setObjAlert] = useState({ isOpen: false, message: '', type: null });
     const [idTeacher, setIdTeacher] = useState(null);
     const [isOpenModalConfirmDelete, setIsOpenModalConfirmDelete] = useState(false);
     const [isOpenModalAddTeacher, setIsOpenModalAddTeacher] = useState(false);
@@ -28,22 +35,28 @@ const ListTeacher = () => {
         setAnchorEl(null);
     };
 
-    const showModalAddStudent = () => {
+    const showModalAddTeacher = () => {
+        setIsOpenModalAddTeacher(true);
+    }
+
+    const showModalUpdateTeacher = () => {
+        const filterTeacher = teachers.find(({ id }) => id === idTeacher);
+        setTeacher(filterTeacher);
         handleClose();
         setIsOpenModalAddTeacher(true);
     }
 
-    const closeModalAddStudent = () => {
+    const closeModalAddTeacher = () => {
         setIdTeacher(null);
         setIsOpenModalAddTeacher(false);
     }
 
-    const handleConfirmDeleteStudent = () => {
+    const handleConfirmDeleteTeacher = () => {
         handleClose();
         setIsOpenModalConfirmDelete(true);
     }
 
-    const handleViewDetailStudent = () => {
+    const handleViewDetailTeacher = () => {
         if (idTeacher) {
             navigate("/list-teacher/detail/" + idTeacher);
         }
@@ -53,31 +66,53 @@ const ListTeacher = () => {
         setIsOpenModalConfirmDelete(false);
     }
 
-    const deleteStudent = () => {
+    const handleCloseAlert = () => {
+        setObjAlert({ isOpen: false, message: '' });
+    };
+
+    const deleteTeacher = () => {
         console.log(idTeacher);
     }
 
-    const headers = ["MSGV", "Full Name", "Email", "Gender", "Phone Number", "Action"];
-    const students = [
-        { id: 1, mssv: "A000001", name: "Dao Van Nhan Van Nhan", email: "nhan123@gmail.com", gender: "Male", phone: "03992777217", status: "" },
-    ];
+    const headers = ["MSGV", "Full Name", "Email", "Gender", "Phone Number", "Level", "Specialize", "Action"];
 
     const renderDataTable = () => {
-        return students.map(student => {
+        return teachers.map(teacher => {
             return {
-                mssv: <span className='font-bold'>{student.mssv}</span>,
-                name: student.name,
-                email: student.email,
-                gender: student.gender === 'Male' ? <span className='font-bold text-primary'>{student.gender}</span> : <span className='font-bold text-purple-700'>{student.gender}</span>,
-                phone: student.phone,
+                mssv: <span className='font-bold'>GV{teacher.id}</span>,
+                name: teacher.name,
+                email: teacher.email,
+                gender: teacher.sex === 'male' ? <span className='font-bold text-primary'>{teacher.sex}</span> : <span className='font-bold text-purple-700'>{teacher.sex}</span>,
+                phone: teacher.phone,
+                level: teacher.level,
+                specialize: teacher.specialize,
                 status: (
                     <div className='flex justify-center'>
-                        <MdOutlineMoreHoriz size={25} className='hover:cursor-pointer hover:bg-gray-400 rounded-full' onClick={(e) => handleClick(e, student.id)} />
+                        <MdOutlineMoreHoriz size={25} className='hover:cursor-pointer hover:bg-gray-400 rounded-full' onClick={(e) => handleClick(e, teacher.id)} />
                     </div>
                 ),
             }
         })
     }
+
+    useEffect(() => {
+        const handleGetData = async () => {
+            try {
+                const teacherResult = await TeacherService.getListTeacher();
+                if (teacherResult.status === 200) {
+                    const data = teacherResult.data.map((teacher) => ({
+                        ...teacher,
+                    }))
+                    setTeachers(data);
+                }
+            } catch (error) {
+                setObjAlert({ isOpen: true, message: error.message, type: "error" });
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        handleGetData();
+    }, [isOpenModalAddTeacher]);
 
     const handleChangePanigation = (e, val) => {
         setPage(val);
@@ -88,7 +123,7 @@ const ListTeacher = () => {
             <div className="w-full h-full bg-white rounded shadow overflow-hidden">
                 <div className='flex bg-gray-700 justify-between shadow-md items-center shadow-gray-200 pr-4'>
                     <h2 className='text-white font-bold text-3xl pb-1 pl-5 uppercase'>List Teacher</h2>
-                    <MdAdd onClick={showModalAddStudent} size={25} className='text-white hover:cursor-pointer hover:bg-gray-200 rounded-full' />
+                    <MdAdd onClick={showModalAddTeacher} size={25} className='text-white hover:cursor-pointer hover:bg-gray-200 rounded-full' />
                 </div>
                 <div className="h-full w-full body-content overflow-hidden">
                     <h4 className='mx-10 border-b border-primary font-bold text-primary text-xl mt-2'>Filter:</h4>
@@ -109,26 +144,29 @@ const ListTeacher = () => {
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem onClick={handleViewDetailStudent}>
+                <MenuItem onClick={handleViewDetailTeacher}>
                     <div className='flex'><MdOutlineRemoveRedEye size={25} className='text-primary' /> <div className='w-20 px-4'>Detail</div></div>
                 </MenuItem>
-                <MenuItem onClick={showModalAddStudent}>
+                <MenuItem onClick={showModalUpdateTeacher}>
                     <div className='flex'><MdEdit size={25} className='text-yellow-700' /> <div className='w-20 px-4'>Update</div></div>
                 </MenuItem>
-                <MenuItem onClick={handleConfirmDeleteStudent}>
+                <MenuItem onClick={handleConfirmDeleteTeacher}>
                     <div className='flex'><MdDeleteForever size={25} className='text-red-700' /> <div className='w-20 px-4'>Delete</div></div>
                 </MenuItem>
             </Menu>
             <ModalConfirm
                 isOpen={isOpenModalConfirmDelete}
                 content="Do you want to delete this student?"
-                handleConfirm={deleteStudent}
+                handleConfirm={deleteTeacher}
                 handleClose={handleCloseModalConfirmDelete} />
-            <FormTeacher
+            {isOpenModalAddTeacher && <FormTeacher
                 isOpen={isOpenModalAddTeacher}
                 idTeacher={idTeacher}
-                handleClose={closeModalAddStudent}
-            />
+                teacher={teacher}
+                handleClose={closeModalAddTeacher}
+            />}
+            {objAlert.isOpen && <ModalAlert {...objAlert} handleClose={handleCloseAlert} />}
+            {isLoading && <Loading />}
         </div>
     )
 }

@@ -11,8 +11,12 @@ export const ConstanstAPI = {
         url: "http://localhost:8080/manager/liststudent",
         method: "GET"
     },
+    GET_LIST_STUDENT_SEARCH: {
+        url: "http://localhost:8080/manager/student/search",
+        method: "POST"
+    },
     GET_INFO_STUDENT: {
-        url: "http://localhost:8080/student",
+        url: "http://localhost:8080/student/infor",
         method: "GET"
     },
     INSERT_STUDENT: {
@@ -23,9 +27,49 @@ export const ConstanstAPI = {
         url: "http://localhost:8080/student/update",
         method: "PUT"
     },
+    DELETE_STUDENT: {
+        url: "http://localhost:8080/manager/student",
+        method: "DELETE"
+    },
     GET_LIST_INTERNSHIP: {
         url: "http://localhost:8080/student/internship/list",
         method: "GET"
+    },
+    CREATE_INTERNSHIP_STUDENT: {
+        url: "http://localhost:8080/student/internshipStudent/create",
+        method: "POST"
+    },
+    UPDATE_INTERNSHIP_STUDENT: {
+        url: "http://localhost:8080/student/internshipStudent/update",
+        method: "PUT"
+    },
+    GET_LIST_TEACHER: {
+        url: "http://localhost:8080/manager/listteacher",
+        method: "GET"
+    },
+    INSERT_TEACHER: {
+        url: "http://localhost:8080/manager/teacher",
+        method: "POST"
+    },
+    UPDATE_TEACHER: {
+        url: "http://localhost:8080/teacher/update",
+        method: "PUT"
+    },
+    GET_INFO_INTERNSHIP_STUDENT: {
+        url: "http://localhost:8080/student/internshipStudent",
+        method: "GET"
+    },
+    GET_EVALUATE_STUDENT: {
+        url: "http://localhost:8080/student/evaluate",
+        method: "GET"
+    },
+    CREATE_EVALUATE_STUDENT: {
+        url: "http://localhost:8080/teacher/evaluate/create",
+        method: "POST"
+    },
+    UPDATE_EVALUATE_STUDENT: {
+        url: "http://localhost:8080/teacher/evaluate/update",
+        method: "PUT"
     },
 }
 

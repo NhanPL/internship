@@ -5,8 +5,8 @@ const TeacherService = {
     getListTeacher: async () => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_TEACHER.method,
-                url: ConstanstAPI.INFO_TEACHER.url,
+                method: ConstanstAPI.GET_LIST_TEACHER.method,
+                url: ConstanstAPI.GET_LIST_TEACHER.url,
             });
             return result;
         } catch (err) {
@@ -27,8 +27,8 @@ const TeacherService = {
     createTeacher: async (data) => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_TEACHER.method,
-                url: ConstanstAPI.INFO_TEACHER.url,
+                method: ConstanstAPI.INSERT_TEACHER.method,
+                url: ConstanstAPI.INSERT_TEACHER.url,
                 data: data
             });
             return result;
@@ -39,8 +39,8 @@ const TeacherService = {
     updateTeacher: async (id, data) => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_TEACHER.method,
-                url: ConstanstAPI.INFO_TEACHER.url + '/' + id,
+                method: ConstanstAPI.UPDATE_TEACHER.method,
+                url: ConstanstAPI.UPDATE_TEACHER.url + '/' + id,
                 data: data
             });
             return result;

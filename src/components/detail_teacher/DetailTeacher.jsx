@@ -1,5 +1,5 @@
 import { Menu, MenuItem } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdDeleteForever, MdEdit, MdOutlineMoreHoriz } from 'react-icons/md';
 // import { useParams } from 'react-router-dom';
 import avatarSrc from "../../assets/avatar.webp";
@@ -7,6 +7,7 @@ import ModalConfirm from '../../shared/modal_confirm/ModalConfirm';
 import FormTeacher from '../from/form-teacher/FormTeacher';
 
 const DetailTeacher = () => {
+    // const {id} = useParams();
     const [isOpenFormTeacher, setIsOpenFormTeacher] = useState(false);
     const [isOpenConfirmDelete, setIsOpenConfirmDelete] = useState(false);
 
@@ -19,8 +20,6 @@ const DetailTeacher = () => {
         setIsOpenConfirmDelete(isOpen);
         handleClose();
     }
-
-    // const {id} = useParams();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -36,6 +35,10 @@ const DetailTeacher = () => {
     const deleteStudent = () => {
         console.log("Delete");
     }
+
+    useEffect(() => {
+
+    }, [])
 
     return (
         <div className='w-full h-full p-5 overflow-hidden'>
@@ -110,7 +113,7 @@ const DetailTeacher = () => {
                     </div>
                 </div>
             </div>
-            <FormTeacher isOpen={isOpenFormTeacher} handleClose={() => handleClickOpenUpdateTeacher(false)} />
+            {isOpenFormTeacher && <FormTeacher isOpen={isOpenFormTeacher} teacher={{}} handleClose={() => handleClickOpenUpdateTeacher(false)} />}
             <ModalConfirm
                 isOpen={isOpenConfirmDelete}
                 content="Do you want to delete this student?"

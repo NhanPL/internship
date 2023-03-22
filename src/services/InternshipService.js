@@ -13,11 +13,11 @@ const InternshipService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
-    getInfoInternship: async (id) => {
+    getInfoInternshipStudent: async (id) => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_TEACHER.method,
-                url: ConstanstAPI.INFO_TEACHER.url + '/' + id,
+                method: ConstanstAPI.GET_INFO_INTERNSHIP_STUDENT.method,
+                url: ConstanstAPI.GET_INFO_INTERNSHIP_STUDENT.url + '/' + id,
             });
             return result;
         } catch (err) {
@@ -27,8 +27,8 @@ const InternshipService = {
     createInternship: async (data) => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_TEACHER.method,
-                url: ConstanstAPI.INFO_TEACHER.url,
+                method: ConstanstAPI.CREATE_INTERNSHIP_STUDENT.method,
+                url: ConstanstAPI.CREATE_INTERNSHIP_STUDENT.url,
                 data: data
             });
             return result;
@@ -36,11 +36,11 @@ const InternshipService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
-    updateInternship: async (id, data) => {
+    updateInternship: async (data) => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_TEACHER.method,
-                url: ConstanstAPI.INFO_TEACHER.url + '/' + id,
+                method: ConstanstAPI.UPDATE_INTERNSHIP_STUDENT.method,
+                url: ConstanstAPI.UPDATE_INTERNSHIP_STUDENT.url,
                 data: data
             });
             return result;

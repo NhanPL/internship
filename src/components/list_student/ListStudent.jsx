@@ -14,6 +14,7 @@ const countElementInPage = 10;
 
 const ListStudent = () => {
     const [page, setPage] = useState(1);
+    const [search, setSearch] = useState({ name: "", className: "", year_study: "" });
     const [isLoading, setIsLoading] = useState(true);
     const [objAlert, setObjAlert] = useState({ isOpen: false, message: '', type: null });
     const [students, setStudents] = useState([]);
@@ -43,7 +44,7 @@ const ListStudent = () => {
             }
         }
         handleGetData();
-    }, [isOpenModalAddStudent]);
+    }, [isOpenModalAddStudent, objAlert.isOpen]);
 
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -85,6 +86,30 @@ const ListStudent = () => {
         setIsOpenModalConfirmDelete(true);
     }
 
+    const handleChangeValueSearch = (name, value) => {
+        setSearch((val) => ({
+            ...val,
+            [name]: value.target.value
+        }));
+    }
+
+    const handleSearchListStudent = async () => {
+        try {
+            setIsLoading(true);
+            const res = await StudentService.getSearchListStudent(search);
+            const data = res.data.map((student) => ({
+                ...student.internship,
+                idInternship: student.internship?.id,
+                ...student.students,
+            }))
+            setStudents(data);
+        } catch (error) {
+            setObjAlert({ isOpen: true, message: error.message, type: "error" });
+        }finally {
+            setIsLoading(false);
+        }
+    }
+
     const handleViewDetailStudent = () => {
         if (idStudent) {
             navigate("/list-student/detail/" + idStudent);
@@ -95,8 +120,14 @@ const ListStudent = () => {
         setIsOpenModalConfirmDelete(false);
     }
 
-    const deleteStudent = () => {
-        console.log(idStudent);
+    const deleteStudent = async () => {
+        try {
+            handleCloseModalConfirmDelete();
+            await StudentService.deleteStudent(idStudent);
+            setObjAlert({ isOpen: true, message: "Student Deleted Success!", type: "success" });
+        } catch (error) {
+            setObjAlert({ isOpen: true, message: "Student Deleted Fail!", type: "error" });
+        }
     }
 
     const headers = ["MSSV", "Full Name", "Email", "Gender", "Phone Number", "Class", "Course", "Start Day", "End Day", "Action"];
@@ -107,7 +138,7 @@ const ListStudent = () => {
                 mssv: <span className='font-bold'>SV{student.id}</span>,
                 name: student.fullname,
                 email: student.email,
-                gender: student.sex === 'Male' ? <span className='font-bold text-primary'>{student.sex}</span> : <span className='font-bold text-purple-700'>{student.sex}</span>,
+                gender: student.sex === 'male' ? <span className='font-bold text-primary'>{student.sex}</span> : <span className='font-bold text-purple-700'>{student.sex}</span>,
                 phone: student.phone,
                 class: student.className,
                 schoolYear: student.year_study,
@@ -138,10 +169,10 @@ const ListStudent = () => {
                 <div className="h-full w-full body-content overflow-hidden">
                     <h4 className='mx-10 border-b border-primary font-bold text-primary text-xl mt-2'>Filter:</h4>
                     <div className='flex gap-5 mt-2 mx-10 mb-5'>
-                        <TextField className='w-full' label="Name:" variant="outlined" />
-                        <TextField className='w-full' label="Class:" variant="outlined" />
-                        <TextField className='w-full' label="School year:" variant="outlined" />
-                        <button className='btn btn-primary w-[420px] text-xl'>Search</button>
+                        <TextField className='w-full' label="Name:" value={search.name} onChange={(val) => handleChangeValueSearch("name", val)} variant="outlined" />
+                        <TextField className='w-full' label="Class:" value={search.className} onChange={(val) => handleChangeValueSearch("className", val)} variant="outlined" />
+                        <TextField className='w-full' label="School year:" value={search.year_study} onChange={(val) => handleChangeValueSearch("year_study", val)} variant="outlined" />
+                        <button className='btn btn-primary w-[420px] text-xl' onClick={handleSearchListStudent}>Search</button>
                     </div>
                     <div className='px-10 w-full h-[430px] overflow-hidden'>
                         <TableGeneral headers={headers} body={renderDataTable()} />

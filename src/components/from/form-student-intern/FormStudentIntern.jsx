@@ -7,23 +7,56 @@ import InternshipService from '../../../services/InternshipService';
 import Loading from '../../../shared/loading/Loading';
 
 const schema = yup.object({
-
+    internshipId: yup.string().required("Internship must be required!")
 }).required();
 
-const FormStudentIntern = ({ isOpen, handleClose }) => {
+const FormStudentIntern = ({ isOpen, student, handleClose }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [idInternshipSelected, setIdInternshipSelected] = useState('');
+    const [idInternshipSelected, setIdInternshipSelected] = useState(student.idInternship ?? "");
     const [internships, setInternships] = useState([]);
-    const { handleSubmit, control } = useForm({
+    const { handleSubmit, control, formState: { errors } } = useForm({
         defaultValues: {
-            name: "",
-            idInternship: "",
+            internshipId: student.idInternship ?? "",
         },
         resolver: yupResolver(schema)
     });
 
     const onSubmit = (data) => {
-        console.log(data);
+        if (student.idInternship) {
+            updateInternshipStudent(data);
+        } else {
+            createInternshipStudent(data);
+        }
+    }
+
+    const createInternshipStudent = async (data) => {
+        try {
+            setIsLoading(true);
+            const payload = {
+                internshipId: +data.internshipId,
+                studentId: student.id
+            }
+            await InternshipService.createInternship(payload);
+        } catch (error) {
+        } finally {
+            setIsLoading(false);
+            handleClose();
+        }
+    }
+
+    const updateInternshipStudent = async (data) => {
+        try {
+            setIsLoading(true);
+            const payload = {
+                internshipId: +data.internshipId,
+                studentId: student.id
+            }
+            await InternshipService.updateInternship(payload);
+        } catch (error) {
+        } finally {
+            setIsLoading(false);
+            handleClose();
+        }
     }
 
     const renderInfoInternship = () => {
@@ -35,11 +68,11 @@ const FormStudentIntern = ({ isOpen, handleClose }) => {
             <div className='pb-4 w-full flex flex-wrap border-separate border-2 p-3 shadow-md'>
                 <div className='flex w-1/2 py-2'>
                     <label className='w-40 font-bold'>Corporation name:</label>
-                    <p>{internship.nameInternship}</p>
+                    <p>{internship.nameInternShip}</p>
                 </div>
                 <div className='flex w-1/2 py-2'>
                     <label className='w-40 font-bold'>Course internship:</label>
-                    <p>{internship.courseInternship}</p>
+                    <p>{internship.courseInternShip}</p>
                 </div>
                 <div className='flex w-full py-2'>
                     <label className='w-40 font-bold'>Teacher name:</label>
@@ -65,12 +98,11 @@ const FormStudentIntern = ({ isOpen, handleClose }) => {
         const getListInternship = async () => {
             try {
                 const result = await InternshipService.getListInternship();
-                console.log(result)
                 if (result.status === 200) {
                     setInternships(result.data);
                 }
             } catch (error) {
-                // handleClose();
+                setIsLoading(false);
             } finally {
                 setIsLoading(false);
             }
@@ -86,12 +118,12 @@ const FormStudentIntern = ({ isOpen, handleClose }) => {
                     <div className='overflow-auto h-full'>
                         <form className='w-full p-6'>
                             <div className='pb-4 w-full'>
-                                <TextField size='small' className='w-full' label="Full name:" variant="outlined" value={"Dao Van Nhan"} disabled />
+                                <TextField size='small' className='w-full' label="Full name:" variant="outlined" value={student.fullname} disabled />
                             </div>
                             <div className='pb-4 w-full'>
                                 <Controller
                                     control={control}
-                                    name="idInternship"
+                                    name="internshipId"
                                     render={({ field }) => (
                                         <FormControl fullWidth size='small'>
                                             <InputLabel id="demo-simple-select-label">Internship</InputLabel>
@@ -111,6 +143,7 @@ const FormStudentIntern = ({ isOpen, handleClose }) => {
                                         </FormControl>
                                     )}
                                 />
+                                <p className='text-red-600'>{errors.internshipId?.message}</p>
                             </div>
                             <div className='font-bold text-xl'>Internship Info:</div>
                             {renderInfoInternship()}
