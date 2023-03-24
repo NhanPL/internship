@@ -1,13 +1,20 @@
 import { Menu, MenuItem } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { MdDeleteForever, MdEdit, MdOutlineMoreHoriz } from 'react-icons/md';
-// import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import avatarSrc from "../../assets/avatar.webp";
+import TeacherService from '../../services/TeacherService';
+import Loading from '../../shared/loading/Loading';
+import ModalAlert from '../../shared/modal-alert/ModalAlert';
 import ModalConfirm from '../../shared/modal_confirm/ModalConfirm';
 import FormTeacher from '../from/form-teacher/FormTeacher';
 
 const DetailTeacher = () => {
-    // const {id} = useParams();
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
+    const [infoTeacher, setInfoTeacher] = useState({});
+    const [objAlert, setObjAlert] = useState({ isOpen: false, message: '', type: null });
     const [isOpenFormTeacher, setIsOpenFormTeacher] = useState(false);
     const [isOpenConfirmDelete, setIsOpenConfirmDelete] = useState(false);
 
@@ -32,13 +39,49 @@ const DetailTeacher = () => {
         setAnchorEl(null);
     };
 
-    const deleteStudent = () => {
-        console.log("Delete");
+    const handleCloseAlert = () => {
+        setObjAlert({ isOpen: false, message: '' });
+        if (objAlert.message === "Teacher Deleted Success!") {
+            navigate('/teacher');
+        }
+    };
+
+    const deleteTeacher = async () => {
+        try {
+            setIsLoading(true);
+            handleClickToggleModalConfirmDelete(false);
+            await TeacherService.deleteTeacher(id);
+            setObjAlert({ isOpen: true, message: "Teacher Deleted Success!", type: "success" });
+        } catch (error) {
+            setObjAlert({ isOpen: true, message: "Teacher Deleted Fail!", type: "error" });
+        } finally {
+            setIsLoading(false);
+        }
     }
 
+    
     useEffect(() => {
+        const getInfoTeacher = async () => {
+            try {
+                setIsLoading(true);
+                let response = {};
+                const resTeacher = await TeacherService.getInfoTeacher(id);
+                response = {
+                    ...resTeacher.data,
+                    name: resTeacher.data.fullName,
+                    id: id,
+                    birthDay: resTeacher.data.dob,
+                }
+                setInfoTeacher(response);
+            } catch (error) {
+                setObjAlert({ isOpen: true, message: "GET Info Teacher Fail!", type: "error" });
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        getInfoTeacher();
+    }, [id, isOpenFormTeacher])
 
-    }, [])
 
     return (
         <div className='w-full h-full p-5 overflow-hidden'>
@@ -61,64 +104,66 @@ const DetailTeacher = () => {
                 </div>
                 <div className="h-full flex pt-4 pb-8 overflow-hidden">
                     <div className='w-1/3 h-full pl-20'>
-                        <img src={avatarSrc} alt="Avatar Account" className='w-full h-full' />
+                        <img src={infoTeacher.avatar === '' ? avatarSrc : infoTeacher.avatar} alt="Avatar Account" className='w-full h-full' />
                     </div>
                     <div className='w-2/3 h-full pl-5 pr-5 overflow-auto'>
                         <div className='bg-gray-700 text-center text-white font-bold text-xl mb-2'>Info</div>
                         <div className='grid grid-cols-2 mb-4 px-4'>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>ID:</div>
-                                <p>A000001</p>
+                                <p>{`GV${id}`}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Full Name:</div>
-                                <p>Dao Van Nhan</p>
+                                <p>{infoTeacher.fullName}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Gmail:</div>
-                                <p>test123@gmail.com</p>
+                                <p>{infoTeacher.email}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Gender:</div>
-                                <p>Male</p>
+                                <p>{infoTeacher.sex}</p>
                             </div>
                             <div className='flex text-lg py-2'>
                                 <div className='w-28 font-bold'>Birth Day:</div>
-                                <p>20/02/1999</p>
+                                <p>{infoTeacher.dob}</p>
                             </div>
                             <div className='flex text-lg py-2'>
                                 <div className='w-28 font-bold'>Phone:</div>
-                                <p>0355884887</p>
+                                <p>{infoTeacher.phone}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Address:</div>
-                                <p>28 - Lê Lợi - Ninh Kiều - Cần Thơ</p>
+                                <p>{infoTeacher.address}</p>
                             </div>
                         </div>
-                        <div className='bg-gray-700 text-center text-white font-bold text-xl mb-2'>Class</div>
+                        <div className='bg-gray-700 text-center text-white font-bold text-xl mb-2'>More</div>
                         <div className='grid grid-cols-2 mb-4 px-4'>
                             <div className='flex text-lg py-2'>
-                                <div className='w-28 font-bold'>Class:</div>
-                                <p>DI017V2</p>
+                                <div className='w-28 font-bold'>Level:</div>
+                                <p>{infoTeacher.level}</p>
                             </div>
                             <div className='flex text-lg py-2'>
-                                <div className='w-28 font-bold'>Course:</div>
-                                <p>K43</p>
+                                <div className='w-28 font-bold'>Salary:</div>
+                                <p>{infoTeacher.salary} VND</p>
                             </div>
                             <div className='flex text-lg py-2'>
-                                <div className='w-28 font-bold'>Deparment:</div>
-                                <p>IT</p>
+                                <div className='w-28 font-bold'>Specialize:</div>
+                                <p>{infoTeacher.specialize}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {isOpenFormTeacher && <FormTeacher isOpen={isOpenFormTeacher} teacher={{}} handleClose={() => handleClickOpenUpdateTeacher(false)} />}
+            {isOpenFormTeacher && <FormTeacher isOpen={isOpenFormTeacher} teacher={infoTeacher} handleClose={() => handleClickOpenUpdateTeacher(false)} />}
             <ModalConfirm
                 isOpen={isOpenConfirmDelete}
-                content="Do you want to delete this student?"
-                handleConfirm={deleteStudent}
+                content="Do you want to delete this teacher?"
+                handleConfirm={deleteTeacher}
                 handleClose={() => handleClickToggleModalConfirmDelete(false)} />
+            {objAlert.isOpen && <ModalAlert {...objAlert} handleClose={handleCloseAlert} />}
+            {isLoading && <Loading />}
         </div>
     )
 }

@@ -9,8 +9,9 @@ import FormStudent from '../from/form-student/FormStudent';
 import Loading from '../../shared/loading/Loading';
 import ModalAlert from '../../shared/modal-alert/ModalAlert';
 import './ListStudent.scss';
+import { countElementInPage } from '../../constant/Constants';
 
-const countElementInPage = 10;
+// const countElementInPage = 10;
 
 const ListStudent = () => {
     const [page, setPage] = useState(1);
@@ -25,26 +26,26 @@ const ListStudent = () => {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const handleGetData = async () => {
-            try {
-                const studentResult = await StudentService.getListStudent();
-                if (studentResult.status === 200) {
-                    const data = studentResult.data.map((student) => ({
-                        ...student.internship,
-                        idInternship: student.internship?.id,
-                        ...student.students,
-                    }))
-                    setStudents(data);
-                }
-            } catch (error) {
-                setObjAlert({ isOpen: true, message: error.message, type: "error" });
-            } finally {
-                setIsLoading(false);
+    const handleGetData = async () => {
+        try {
+            const studentResult = await StudentService.getListStudent();
+            if (studentResult?.status === 200) {
+                const data = studentResult.data.map((student) => ({
+                    ...student.internship,
+                    idInternship: student.internship?.id,
+                    ...student.students,
+                }))
+                setStudents(data);
             }
+        } catch (error) {
+            setObjAlert({ isOpen: true, message: error.message, type: "error" });
+        } finally {
+            setIsLoading(false);
         }
+    }
+    useEffect(() => {
         handleGetData();
-    }, [isOpenModalAddStudent, objAlert.isOpen]);
+    }, [isOpenModalAddStudent]);
 
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -105,7 +106,7 @@ const ListStudent = () => {
             setStudents(data);
         } catch (error) {
             setObjAlert({ isOpen: true, message: error.message, type: "error" });
-        }finally {
+        } finally {
             setIsLoading(false);
         }
     }
@@ -124,6 +125,7 @@ const ListStudent = () => {
         try {
             handleCloseModalConfirmDelete();
             await StudentService.deleteStudent(idStudent);
+            handleGetData();
             setObjAlert({ isOpen: true, message: "Student Deleted Success!", type: "success" });
         } catch (error) {
             setObjAlert({ isOpen: true, message: "Student Deleted Fail!", type: "error" });

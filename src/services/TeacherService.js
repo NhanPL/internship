@@ -51,8 +51,8 @@ const TeacherService = {
     deleteTeacher: async (id) => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_TEACHER.method,
-                url: ConstanstAPI.INFO_TEACHER.url + '/' + id,
+                method: ConstanstAPI.DELETE_TEACHER.method,
+                url: ConstanstAPI.DELETE_TEACHER.url + '/' + id,
             });
             return result;
         } catch (err) {

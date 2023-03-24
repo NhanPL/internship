@@ -2,6 +2,7 @@ import { Menu, MenuItem, Pagination, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { MdAdd, MdDeleteForever, MdEdit, MdOutlineMoreHoriz, MdOutlineRemoveRedEye } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
+import { countElementInPage } from '../../constant/Constants';
 import TeacherService from '../../services/TeacherService';
 import Loading from '../../shared/loading/Loading';
 import ModalAlert from '../../shared/modal-alert/ModalAlert';
@@ -70,14 +71,24 @@ const ListTeacher = () => {
         setObjAlert({ isOpen: false, message: '' });
     };
 
-    const deleteTeacher = () => {
-        console.log(idTeacher);
+    const deleteTeacher = async () => {
+        try {
+            setIsLoading(true);
+            handleCloseModalConfirmDelete();
+            await TeacherService.deleteTeacher(idTeacher);
+            await handleGetData();
+            setObjAlert({ isOpen: true, message: "Teacher Deleted Success!", type: "success" });
+        } catch (error) {
+            setObjAlert({ isOpen: true, message: "Teacher Deleted Fail!", type: "error" });
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     const headers = ["MSGV", "Full Name", "Email", "Gender", "Phone Number", "Level", "Specialize", "Action"];
 
     const renderDataTable = () => {
-        return teachers.map(teacher => {
+        return teachers.slice((page - 1) * countElementInPage, countElementInPage * page).map(teacher => {
             return {
                 mssv: <span className='font-bold'>GV{teacher.id}</span>,
                 name: teacher.name,
@@ -95,22 +106,22 @@ const ListTeacher = () => {
         })
     }
 
-    useEffect(() => {
-        const handleGetData = async () => {
-            try {
-                const teacherResult = await TeacherService.getListTeacher();
-                if (teacherResult.status === 200) {
-                    const data = teacherResult.data.map((teacher) => ({
-                        ...teacher,
-                    }))
-                    setTeachers(data);
-                }
-            } catch (error) {
-                setObjAlert({ isOpen: true, message: error.message, type: "error" });
-            } finally {
-                setIsLoading(false);
+    const handleGetData = async () => {
+        try {
+            const teacherResult = await TeacherService.getListTeacher();
+            if (teacherResult.status === 200) {
+                const data = teacherResult.data.map((teacher) => ({
+                    ...teacher,
+                }))
+                setTeachers(data);
             }
+        } catch (error) {
+            setObjAlert({ isOpen: true, message: error.message, type: "error" });
+        } finally {
+            setIsLoading(false);
         }
+    }
+    useEffect(() => {
         handleGetData();
     }, [isOpenModalAddTeacher]);
 
@@ -136,7 +147,7 @@ const ListTeacher = () => {
                     <div className='px-10 w-full h-[430px] overflow-hidden'>
                         <TableGeneral headers={headers} body={renderDataTable()} />
                     </div>
-                    <div className='mt-2 px-10 flex justify-end'><Pagination onChange={handleChangePanigation} page={page} count={2} color="primary" showFirstButton showLastButton /></div>
+                    <div className='mt-2 px-10 flex justify-end'><Pagination onChange={handleChangePanigation} page={page} count={Math.ceil((teachers.length + 1) / countElementInPage)} color="primary" showFirstButton showLastButton /></div>
                 </div>
             </div>
             <Menu

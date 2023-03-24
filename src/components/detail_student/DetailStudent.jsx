@@ -103,7 +103,6 @@ const DetailStudent = () => {
                     ...response,
                     ...resStudent.data
                 }
-                console.log(response);
                 setInfoStudent(response);
             } catch (error) {
                 setObjAlert({ isOpen: true, message: "GET Info Student Fail!", type: "error" });

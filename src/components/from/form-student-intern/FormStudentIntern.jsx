@@ -36,7 +36,7 @@ const FormStudentIntern = ({ isOpen, student, handleClose }) => {
                 internshipId: +data.internshipId,
                 studentId: student.id
             }
-            await InternshipService.createInternship(payload);
+            await InternshipService.createInternshipStudent(payload);
         } catch (error) {
         } finally {
             setIsLoading(false);

@@ -10,7 +10,8 @@ const StudentService = {
             });
             return result;
         } catch (err) {
-            return { status: err.response.status, data: err.response.data?.message }
+            console.log(err.toJSON())
+            return { status: err.response?.status, data: err.response?.data?.message }
         }
     },
     getSearchListStudent: async (data) => {

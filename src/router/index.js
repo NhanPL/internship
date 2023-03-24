@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import {
     BrowserRouter as Router, Route, Routes
 } from "react-router-dom";
+import DetailInternship from '../components/detail_internship/DetailInternship';
 import DetailStudent from '../components/detail_student/DetailStudent';
 import DetailTeacher from '../components/detail_teacher/DetailTeacher';
 import ForgetPassword from '../components/forget_password/ForgetPassword';
@@ -35,6 +36,7 @@ function RouterComponent() {
                 <Route path='/teacher' element={<ListTeacher />}></Route>
                 <Route path='/list-teacher/detail/:id' element={<DetailTeacher />}></Route>
                 <Route path='/internship' element={<ListInternship />}></Route>
+                <Route path='/internship/:id' element={<DetailInternship />}></Route>
             </Route>
         )
     }

@@ -27,6 +27,18 @@ const InternshipService = {
     createInternship: async (data) => {
         try {
             const result = await https({
+                method: ConstanstAPI.CREATE_INTERNSHIP.method,
+                url: ConstanstAPI.CREATE_INTERNSHIP.url,
+                data: data
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
+    createInternshipStudent: async (data) => {
+        try {
+            const result = await https({
                 method: ConstanstAPI.CREATE_INTERNSHIP_STUDENT.method,
                 url: ConstanstAPI.CREATE_INTERNSHIP_STUDENT.url,
                 data: data
@@ -51,8 +63,8 @@ const InternshipService = {
     deleteInternship: async (id) => {
         try {
             const result = await https({
-                method: ConstanstAPI.INFO_TEACHER.method,
-                url: ConstanstAPI.INFO_TEACHER.url + '/' + id,
+                method: ConstanstAPI.DELETE_INTERNSHIP.method,
+                url: ConstanstAPI.DELETE_INTERNSHIP.url + '/' + id,
             });
             return result;
         } catch (err) {
