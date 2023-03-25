@@ -1,1 +1,1 @@
-export const countElementInPage = 5;
+export const countElementInPage = 10;

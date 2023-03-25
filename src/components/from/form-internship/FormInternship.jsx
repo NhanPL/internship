@@ -19,10 +19,11 @@ const schema = yup.object({
 
 const FormInternship = ({ internship, isOpen, handleClose }) => {
 
+    const isUpdate = !checkEmptyObject(internship);
     const [isLoading, setIsLoading] = useState(true);
-    const [listTeacher, setListTeacher] = useState([]);
+    const [listTeacher, setListTeacher] = useState([{ id: internship.teacherId ?? 1, name: "" }]);
 
-    const { handleSubmit, control, formState: { errors } } = useForm({
+    const { handleSubmit, control, formState: { errors }, setValue } = useForm({
         defaultValues: {
             nameInternShip: "",
             courseInternShip: "",
@@ -44,9 +45,23 @@ const FormInternship = ({ internship, isOpen, handleClose }) => {
         getListTeacher();
     }, [])
 
+    useEffect(() => {
+        if (isUpdate) {
+            setValue("nameInternShip", internship.nameInternShip);
+            setValue("courseInternShip", internship.courseInternShip);
+            setValue("address", internship.address);
+            setValue("description", internship.description);
+            setValue("startDay", internship.startDay);
+            setValue("endDay", internship.endDay);
+            setValue("teacher_id", internship.teacherId);
+        }
+    }, [isUpdate, internship, setValue])
+
     const onSubmit = (data) => {
         if (!internship || checkEmptyObject(internship)) {
             createInternship(data);
+        } else {
+            updateInternship(data);
         }
     }
 
@@ -61,11 +76,22 @@ const FormInternship = ({ internship, isOpen, handleClose }) => {
         }
     }
 
+    const updateInternship = async (data) => {
+        try {
+            setIsLoading(true);
+            await InternshipService.updateInternship(data, internship.id);
+        } catch (error) {
+
+        } finally {
+            handleClose();
+        }
+    }
+
     return (
         <Fragment>
             <Dialog open={isOpen} onClose={handleClose} fullWidth maxWidth="md">
                 <div className='w-full flex flex-col overflow-auto'>
-                    <h2 className='modal-from-header mt-5'>Add Internship</h2>
+                    <h2 className='modal-from-header mt-5'>{isUpdate ? 'Update' : 'Add'} Internship</h2>
                     <div className='overflow-auto h-full'>
                         <form className='w-full p-6'>
                             <div className='flex gap-4'>
@@ -142,8 +168,10 @@ const FormInternship = ({ internship, isOpen, handleClose }) => {
                                                 labelId="demo-simple-select-label"
                                                 id="demo-simple-select"
                                                 label="Teacher"
+                                                defaultValue=""
                                                 {...field}
                                             >
+                                                <MenuItem value="" disabled></MenuItem>
                                                 {
                                                     listTeacher.map((teacher) => (<MenuItem key={teacher.id} value={teacher.id}>{teacher.name}</MenuItem>))
                                                 }
@@ -156,7 +184,7 @@ const FormInternship = ({ internship, isOpen, handleClose }) => {
                         </form>
                     </div>
                     <div className='flex justify-center my-6 gap-5'>
-                        <button onClick={handleSubmit(onSubmit)} className="btn btn-primary w-24">Add</button>
+                        <button onClick={handleSubmit(onSubmit)} className="btn btn-primary w-24">{isUpdate ? 'Update' : 'Add'}</button>
                         <button onClick={handleClose} className="btn btn-secondary w-24">Close</button>
                     </div>
                 </div>

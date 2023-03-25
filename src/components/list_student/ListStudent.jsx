@@ -37,6 +37,7 @@ const ListStudent = () => {
                 }))
                 setStudents(data);
             }
+            console.log(studentResult)
         } catch (error) {
             setObjAlert({ isOpen: true, message: error.message, type: "error" });
         } finally {
@@ -179,7 +180,7 @@ const ListStudent = () => {
                     <div className='px-10 w-full h-[430px] overflow-hidden'>
                         <TableGeneral headers={headers} body={renderDataTable()} />
                     </div>
-                    <div className='mt-2 px-10 flex justify-end'><Pagination onChange={handleChangePanigation} page={page} count={Math.ceil((students.length + 1) / countElementInPage)} color="primary" showFirstButton showLastButton /></div>
+                    <div className='mt-2 px-10 flex justify-end'><Pagination onChange={handleChangePanigation} page={page} count={Math.ceil(students.length / countElementInPage)} color="primary" showFirstButton showLastButton /></div>
                 </div>
             </div>
             <Menu

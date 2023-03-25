@@ -13,6 +13,29 @@ const InternshipService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
+    getSearchListInternship: async (data) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.GET_SEARCH_LIST_INTERNSHIP.method,
+                url: ConstanstAPI.GET_SEARCH_LIST_INTERNSHIP.url,
+                data: data
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
+    getInfoInternship: async (id) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.GET_INFO_INTERNSHIP.method,
+                url: ConstanstAPI.GET_INFO_INTERNSHIP.url + '/' + id,
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
     getInfoInternshipStudent: async (id) => {
         try {
             const result = await https({
@@ -36,6 +59,18 @@ const InternshipService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
+    updateInternship: async (data, id) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.UPDATE_INTERNSHIP.method,
+                url: ConstanstAPI.UPDATE_INTERNSHIP.url + '/' + id,
+                data: data
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
     createInternshipStudent: async (data) => {
         try {
             const result = await https({
@@ -48,7 +83,7 @@ const InternshipService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
-    updateInternship: async (data) => {
+    updateInternshipStudent: async (data) => {
         try {
             const result = await https({
                 method: ConstanstAPI.UPDATE_INTERNSHIP_STUDENT.method,
@@ -65,6 +100,17 @@ const InternshipService = {
             const result = await https({
                 method: ConstanstAPI.DELETE_INTERNSHIP.method,
                 url: ConstanstAPI.DELETE_INTERNSHIP.url + '/' + id,
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
+    deleteInternshipStudent: async (id) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.DELETE_INTERNSHIP_STUDENT.method,
+                url: ConstanstAPI.DELETE_INTERNSHIP_STUDENT.url + '/' + id,
             });
             return result;
         } catch (err) {

@@ -3,7 +3,7 @@ import "./Loading.scss";
 
 const Loading = () => {
     return (
-        <div className='w-full h-screen absolute left-0 top-0 loading-page'>
+        <div className='w-full h-screen fixed left-0 top-0 loading-page'>
             <div className='bg-gray-500 opacity-40 w-full h-screen' />
             <div className='rounded-md absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-transparent opacity-100'>
                 <div className="preloader">

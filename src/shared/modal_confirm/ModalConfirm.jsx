@@ -5,7 +5,7 @@ import { AiOutlineQuestionCircle } from "react-icons/ai"
 const ModalConfirm = ({ isOpen, content, textConfirm, handleConfirm, handleClose }) => {
     return (
         <Dialog open={isOpen} onClose={handleClose}>
-            <div className='w-[450px] h-[280px] flex flex-col justify-center'>
+            <div className='w-[450px] min-h-[280px] flex flex-col justify-center px-4 py-5'>
                 <div className='flex justify-center'><AiOutlineQuestionCircle className='text-red-600' size={90}/></div>
                 <h2 className='text-3xl text-center text-primary uppercase font-bold'>Confirm</h2>
                 <p className='text-2xl text-center mt-7'>{content}</p>

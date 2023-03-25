@@ -14,6 +14,7 @@ import './ListTeacher.scss';
 const ListTeacher = () => {
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
+    const [search, setSearch] = useState({ name: "", level: "", specialize: "" });
     const [teachers, setTeachers] = useState([]);
     const [teacher, setTeacher] = useState({});
     const [objAlert, setObjAlert] = useState({ isOpen: false, message: '', type: null });
@@ -23,9 +24,31 @@ const ListTeacher = () => {
 
     const navigate = useNavigate();
 
-
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+
+    const handleChangeValueSearch = (name, value) => {
+        setSearch((val) => ({
+            ...val,
+            [name]: value.target.value
+        }));
+    }
+
+    const handleSearchListTeacher = async () => {
+        try {
+            setIsLoading(true);
+            const res = await TeacherService.getSearchListTeacher(search);
+            const data = res.data.map((teacher) => ({
+                ...teacher,
+                name: teacher.fullName,
+            }))
+            setTeachers(data);
+        } catch (error) {
+            setObjAlert({ isOpen: true, message: error.message, type: "error" });
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     const handleClick = (event, id) => {
         setIdTeacher(id);
@@ -139,15 +162,15 @@ const ListTeacher = () => {
                 <div className="h-full w-full body-content overflow-hidden">
                     <h4 className='mx-10 border-b border-primary font-bold text-primary text-xl mt-2'>Filter:</h4>
                     <div className='flex gap-5 mt-2 mx-10 mb-5'>
-                        <TextField className='w-full' label="Name:" variant="outlined" />
-                        <TextField className='w-full' label="Class:" variant="outlined" />
-                        <TextField className='w-full' label="School year:" variant="outlined" />
-                        <button className='btn btn-primary w-[420px] text-xl'>Search</button>
+                        <TextField className='w-full' label="Name:" onChange={(val) => handleChangeValueSearch("name", val)} variant="outlined" />
+                        <TextField className='w-full' label="Level:" onChange={(val) => handleChangeValueSearch("level", val)} variant="outlined" />
+                        <TextField className='w-full' label="Specialize:" onChange={(val) => handleChangeValueSearch("specialize", val)} variant="outlined" />
+                        <button className='btn btn-primary w-[420px] text-xl' onClick={handleSearchListTeacher}>Search</button>
                     </div>
                     <div className='px-10 w-full h-[430px] overflow-hidden'>
                         <TableGeneral headers={headers} body={renderDataTable()} />
                     </div>
-                    <div className='mt-2 px-10 flex justify-end'><Pagination onChange={handleChangePanigation} page={page} count={Math.ceil((teachers.length + 1) / countElementInPage)} color="primary" showFirstButton showLastButton /></div>
+                    <div className='mt-2 px-10 flex justify-end'><Pagination onChange={handleChangePanigation} page={page} count={Math.ceil(teachers.length / countElementInPage)} color="primary" showFirstButton showLastButton /></div>
                 </div>
             </div>
             <Menu

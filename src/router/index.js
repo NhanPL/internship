@@ -15,6 +15,7 @@ import ListStudent from '../components/list_student/ListStudent';
 import ListTeacher from '../components/list_teacher/ListTeacher';
 import Login from '../components/login/Login';
 import PageNotFound from '../components/page_not_found/PageNotFound';
+import Statistical from '../components/statistical/Statistical';
 
 function RouterComponent() {
     const { token } = useSelector((state) => state.auth);
@@ -36,7 +37,8 @@ function RouterComponent() {
                 <Route path='/teacher' element={<ListTeacher />}></Route>
                 <Route path='/list-teacher/detail/:id' element={<DetailTeacher />}></Route>
                 <Route path='/internship' element={<ListInternship />}></Route>
-                <Route path='/internship/:id' element={<DetailInternship />}></Route>
+                <Route path='/internship/detail/:id' element={<DetailInternship />}></Route>
+                <Route path='/statistical' element={<Statistical />}></Route>
             </Route>
         )
     }

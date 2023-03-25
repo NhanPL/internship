@@ -16,6 +16,7 @@ export const fileToBase64 = (file) => {
 }
 
 export const checkEmptyObject = (obj) => {
+    if (!obj) return true;
     return (!obj || Object.keys(obj).length === 0)
         && Object.getPrototypeOf(obj) === Object.prototype
 }

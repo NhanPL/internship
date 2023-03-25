@@ -25,7 +25,7 @@ const Sidebar = ({ isShowMenu }) => {
                         <MdLocationCity size={30} />
                         <span className='pl-5 text-xl sidebar-text'>Quan ly thuc tap</span>
                     </NavLink>
-                    <NavLink to={'/dashboard'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
+                    <NavLink to={'/statistical'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
                         <MdOutlineInsertChartOutlined size={30} />
                         <span className='pl-5 text-xl sidebar-text'>Thong ke</span>
                     </NavLink>

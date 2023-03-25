@@ -43,9 +43,17 @@ export const ConstanstAPI = {
         url: "http://localhost:8080/student/internship/list",
         method: "GET"
     },
+    GET_SEARCH_LIST_INTERNSHIP: {
+        url: "http://localhost:8080/manager/intern/search",
+        method: "POST"
+    },
     CREATE_INTERNSHIP: {
         url: "http://localhost:8080/manager/intern",
         method: "POST"
+    },
+    UPDATE_INTERNSHIP: {
+        url: "http://localhost:8080/manager/intern/update",
+        method: "PUT"
     },
     CREATE_INTERNSHIP_STUDENT: {
         url: "http://localhost:8080/student/internshipStudent/create",
@@ -55,21 +63,17 @@ export const ConstanstAPI = {
         url: "http://localhost:8080/student/internshipStudent/update",
         method: "PUT"
     },
-    INSERT_INTERNSHIP: {
-        url: "http://localhost:8080/manager/intern/deleted",
-        method: "DELETE"
-    },
-    UPDATE_INTERNSHIP: {
-        url: "http://localhost:8080/manager/intern/deleted",
-        method: "DELETE"
-    },
     DELETE_INTERNSHIP: {
-        url: "http://localhost:8080/manager/intern/deleted",
+        url: "http://localhost:8080/manager/internship/deleted",
         method: "DELETE"
     },
     GET_LIST_TEACHER: {
         url: "http://localhost:8080/manager/listteacher",
         method: "GET"
+    },
+    GET_SEARCH_LIST_TEACHER: {
+        url: "http://localhost:8080/manager/teacher/search",
+        method: "POST"
     },
     INFO_TEACHER: {
         url: "http://localhost:8080/manager/teacher",
@@ -91,6 +95,14 @@ export const ConstanstAPI = {
         url: "http://localhost:8080/student/internshipStudent",
         method: "GET"
     },
+    DELETE_INTERNSHIP_STUDENT: {
+        url: "http://localhost:8080/student/internshipStudent",
+        method: "DELETE"
+    },
+    GET_INFO_INTERNSHIP: {
+        url: "http://localhost:8080/teacher/internship",
+        method: "GET"
+    },
     GET_EVALUATE_STUDENT: {
         url: "http://localhost:8080/student/evaluate",
         method: "GET"
@@ -102,6 +114,10 @@ export const ConstanstAPI = {
     UPDATE_EVALUATE_STUDENT: {
         url: "http://localhost:8080/teacher/evaluate/update",
         method: "PUT"
+    },
+    GET_DATA_STATISTICAL: {
+        url: "http://localhost:8080/manager/statistical",
+        method: "GET"
     },
 }
 

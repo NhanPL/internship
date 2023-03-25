@@ -2,6 +2,8 @@ import { Menu, MenuItem } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { MdDeleteForever, MdEdit, MdOutlineMoreHoriz } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
+import TableGeneral from "../../shared/table_general/TableGeneral";
+import FormInternship from "../from/form-internship/FormInternship";
 import InternshipService from '../../services/InternshipService';
 import Loading from '../../shared/loading/Loading';
 import ModalAlert from '../../shared/modal-alert/ModalAlert';
@@ -11,18 +13,43 @@ const DetailInternship = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [student, setStudent] = useState({});
     const [infoInternship, setInfoInternship] = useState({});
     const [objAlert, setObjAlert] = useState({ isOpen: false, message: '', type: null });
     const [isOpenFormInternship, setIsOpenFormInternship] = useState(false);
-    const [isOpenConfirmDelete, setIsOpenConfirmDelete] = useState(false);
+    const [isOpenConfirmDelete, setIsOpenConfirmDelete] = useState({ isOpen: false, content: "", type: "" });
+
+    const headers = ["MSSV", "Name", "Email", "Gender", "Phone", "Class", "Course", "Action"];
+
+    const renderDataTable = () => {
+        if (!infoInternship?.students) {
+            return [];
+        }
+        return infoInternship.students?.map(student => {
+            return {
+                mssv: <span className='font-bold'>SV{student.id}</span>,
+                name: student.fullname,
+                email: student.email,
+                gender: student.sex === 'male' ? <span className='font-bold text-primary'>{student.sex}</span> : <span className='font-bold text-purple-700'>{student.sex}</span>,
+                phone: student.phone,
+                class: student.className,
+                schoolYear: student.year_study,
+                status: (
+                    <div className='flex justify-center'>
+                        <MdOutlineMoreHoriz size={25} className='hover:cursor-pointer hover:bg-gray-400 rounded-full' onClick={(e) => handleClickStudent(e, student)} />
+                    </div>
+                ),
+            }
+        })
+    }
 
     const handleClickOpenUpdateInternship = (isOpen) => {
         setIsOpenFormInternship(isOpen);
         handleClose();
     }
 
-    const handleClickToggleModalConfirmDelete = (isOpen) => {
-        setIsOpenConfirmDelete(isOpen);
+    const handleClickToggleModalConfirmDelete = (isOpen, content = '', type = '') => {
+        setIsOpenConfirmDelete({ isOpen, content, type });
         handleClose();
     }
 
@@ -37,6 +64,18 @@ const DetailInternship = () => {
         setAnchorEl(null);
     };
 
+    const [anchorElStudent, setAnchorElStudent] = React.useState(null);
+    const openStudent = Boolean(anchorElStudent);
+
+    const handleClickStudent = (event, student) => {
+        setAnchorElStudent(event.currentTarget);
+        setStudent(student);
+    };
+
+    const handleCloseStudent = () => {
+        setAnchorElStudent(null);
+    };
+
     const handleCloseAlert = () => {
         setObjAlert({ isOpen: false, message: '' });
         if (objAlert.message === "Student Deleted Success!") {
@@ -44,29 +83,59 @@ const DetailInternship = () => {
         }
     };
 
-    const deleteInternship = () => {
-        console.log("Delete");
+    const navigateDetailStudent = () => {
+        navigate(`/list-student/detail/${student.id}`);
+    }
+
+    const handleConfirmModalDelete = () => {
+        if(isOpenConfirmDelete.type==="INTERNSHIP") {
+            deleteInternship();
+        }else {
+            deleteStudentFormInternship();
+        }
+    }
+
+    const deleteInternship = async () => {
+        try {
+            handleClickToggleModalConfirmDelete(false);
+            await InternshipService.deleteInternship(id);
+            navigate("/internship");
+        } catch (error) {
+            setObjAlert({ isOpen: true, message: "Internship Deleted Fail!", type: "error" });
+        }
+    }
+
+    const deleteStudentFormInternship = async () => {
+        try {
+            handleClickToggleModalConfirmDelete(false);
+            const res = await InternshipService.deleteInternshipStudent(student.idIntershipStudent);
+            if(res.status !== 200) {
+                setObjAlert({ isOpen: true, message: "Can't delete internship student!", type: "error" });
+            }
+        } catch (error) {
+            setObjAlert({ isOpen: true, message: "Student Deleted Fail!", type: "error" });
+        }
     }
 
     useEffect(() => {
         const getInfoInternship = async () => {
-            // try {
-            //     let response = {};
-            //     const resInternship = await InternshipService.getInfoInternship(id);
-            //     response = {
-            //         ...resInternship.data
-            //     }
-            //     console.log(response)
-            //     setInfoInternship(response);
-            // } catch (error) {
-            //     setObjAlert({ isOpen: true, message: "GET Info Internship Fail!", type: "error" });
-            // } finally {
-            //     setIsLoading(false);
-            // }
+            try {
+                setIsLoading(true);
+                let response = {};
+                const resInternship = await InternshipService.getInfoInternship(id);
+                response = {
+                    ...resInternship.data
+                }
+                setInfoInternship(response);
+            } catch (error) {
+                setObjAlert({ isOpen: true, message: "GET Info Internship Fail!", type: "error" });
+            } finally {
+                setIsLoading(false);
+            }
         }
 
         getInfoInternship();
-    }, [id])
+    }, [id, isOpenFormInternship])
 
     return (
         <div className='w-full h-full p-5 overflow-hidden'>
@@ -80,67 +149,68 @@ const DetailInternship = () => {
                         onClose={handleClose}
                     >
                         <MenuItem onClick={() => handleClickOpenUpdateInternship(true)}>
-                            <div className='flex'><MdEdit size={25} className='text-primary' /> <div className='px-4'>Update Info</div></div>
+                            <div className='flex'><MdEdit size={25} className='text-primary' /> <div className='px-4'>Update Internship</div></div>
                         </MenuItem>
-                        <MenuItem onClick={() => handleClickToggleModalConfirmDelete(true)}>
+                        <MenuItem onClick={() => handleClickToggleModalConfirmDelete(true, "Are you sure to delete this internship!", "INTERNSHIP")}>
                             <div className='flex'><MdDeleteForever size={25} className='text-red-500' /> <div className='px-4'>Delete</div></div>
                         </MenuItem>
                     </Menu>
                 </div>
-                <div className="h-full flex flex-col pt-4 pb-8 overflow-hidden">
+                <div className="h-full flex flex-col pt-4 pb-8 px-4 overflow-hidden">
                     <div className='bg-gray-700 text-center text-white font-bold text-xl mb-2'>Info</div>
                     <div className='grid grid-cols-2 mb-4 px-4'>
-                        <div className='flex text-lg col-span-2 py-2'>
-                            <div className='w-28 font-bold'>ID:</div>
-                            <p>A000001</p>
-                        </div>
-                        <div className='flex text-lg col-span-2 py-2'>
-                            <div className='w-28 font-bold'>Full Name:</div>
-                            <p>Dao Van Nhan</p>
-                        </div>
-                        <div className='flex text-lg col-span-2 py-2'>
-                            <div className='w-28 font-bold'>Gmail:</div>
-                            <p>test123@gmail.com</p>
-                        </div>
-                        <div className='flex text-lg col-span-2 py-2'>
-                            <div className='w-28 font-bold'>Gender:</div>
-                            <p>Male</p>
-                        </div>
-                        <div className='flex text-lg py-2'>
-                            <div className='w-28 font-bold'>Birth Day:</div>
-                            <p>20/02/1999</p>
-                        </div>
-                        <div className='flex text-lg py-2'>
-                            <div className='w-28 font-bold'>Phone:</div>
-                            <p>0355884887</p>
-                        </div>
-                        <div className='flex text-lg col-span-2 py-2'>
-                            <div className='w-28 font-bold'>Address:</div>
-                            <p>28 - Lê Lợi - Ninh Kiều - Cần Thơ</p>
-                        </div>
-                    </div>
-                    <div className='bg-gray-700 text-center text-white font-bold text-xl mb-2'>Class</div>
-                    <div className='grid grid-cols-2 mb-4 px-4'>
-                        <div className='flex text-lg py-2'>
-                            <div className='w-28 font-bold'>Class:</div>
-                            <p>DI017V2</p>
+                        <div className='flex text-lg py-2 w-full'>
+                            <div className='w-28 font-bold'>Name:</div>
+                            <p>{infoInternship.nameInternShip}</p>
                         </div>
                         <div className='flex text-lg py-2'>
                             <div className='w-28 font-bold'>Course:</div>
-                            <p>K43</p>
+                            <p>{infoInternship.courseInternShip}</p>
+                        </div>
+                        <div className='flex text-lg col-span-2 py-2'>
+                            <div className='w-28 font-bold'>Teacher:</div>
+                            <p>{infoInternship.teacherName}</p>
+                        </div>
+                        <div className='flex text-lg col-span-2 py-2'>
+                            <div className='w-28 font-bold'>Address:</div>
+                            <p>{infoInternship.address}</p>
                         </div>
                         <div className='flex text-lg py-2'>
-                            <div className='w-28 font-bold'>Deparment:</div>
-                            <p>IT</p>
+                            <div className='w-28 font-bold'>Start Day:</div>
+                            <p>{infoInternship.startDay}</p>
                         </div>
+                        <div className='flex text-lg py-2'>
+                            <div className='w-28 font-bold'>End Day:</div>
+                            <p>{infoInternship.endDay}</p>
+                        </div>
+                        <div className='flex text-lg py-2'>
+                            <div className='w-28 font-bold'>Description:</div>
+                            <p>{infoInternship.description}</p>
+                        </div>
+                    </div>
+                    <div className='bg-gray-700 text-center text-white font-bold text-xl mb-2'>List Student</div>
+                    <div className='w-full h-full overflow-hidden'>
+                        <TableGeneral headers={headers} body={renderDataTable()} />
                     </div>
                 </div>
             </div>
-            {/* {isOpenFormInternship && <FormInternship isOpen={isOpenFormInternship} teacher={{}} handleClose={() => handleClickOpenUpdateInternship(false)} />} */}
+            <Menu
+                anchorEl={anchorElStudent}
+                open={openStudent}
+                onClose={handleCloseStudent}
+            >
+                <MenuItem onClick={navigateDetailStudent}>
+                    <div className='flex'><MdEdit size={25} className='text-primary' /> <div className='px-4'>Detail Student</div></div>
+                </MenuItem>
+                <MenuItem onClick={() => handleClickToggleModalConfirmDelete(true, "Are you sure to remove this student from the internship?", "STUDENT")}>
+                    <div className='flex'><MdDeleteForever size={25} className='text-red-500' /> <div className='px-4'>Delete</div></div>
+                </MenuItem>
+            </Menu>
+            {isOpenFormInternship && <FormInternship isOpen={isOpenFormInternship} internship={infoInternship} handleClose={() => handleClickOpenUpdateInternship(false)} />}
             <ModalConfirm
-                isOpen={isOpenConfirmDelete}
-                content="Do you want to delete this student?"
-                handleConfirm={deleteInternship}
+                isOpen={isOpenConfirmDelete.isOpen}
+                content={isOpenConfirmDelete.content}
+                handleConfirm={handleConfirmModalDelete}
                 handleClose={() => handleClickToggleModalConfirmDelete(false)} />
             {objAlert.isOpen && <ModalAlert {...objAlert} handleClose={handleCloseAlert} />}
             {isLoading && <Loading />}

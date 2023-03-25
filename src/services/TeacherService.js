@@ -13,6 +13,18 @@ const TeacherService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
+    getSearchListTeacher: async (data) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.GET_SEARCH_LIST_TEACHER.method,
+                url: ConstanstAPI.GET_SEARCH_LIST_TEACHER.url,
+                data: data,
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
     getInfoTeacher: async (id) => {
         try {
             const result = await https({

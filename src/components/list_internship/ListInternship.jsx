@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { countElementInPage } from '../../constant/Constants';
 import InternshipService from '../../services/InternshipService';
 import Loading from '../../shared/loading/Loading';
+import ModalAlert from '../../shared/modal-alert/ModalAlert';
 import ModalConfirm from '../../shared/modal_confirm/ModalConfirm';
 import TableGeneral from '../../shared/table_general/TableGeneral';
 import FormInternship from '../from/form-internship/FormInternship';
@@ -13,6 +14,9 @@ import './ListInternship.scss';
 const ListInternship = () => {
     const [page, setPage] = useState(1);
     const [internships, setInternships] = useState([]);
+    const [search, setSearch] = useState({ nameInternship: "", courseInternship: "", nameTeacher: "" });
+    const [objAlert, setObjAlert] = useState({ isOpen: false, message: '', type: null });
+    const [internship, setInternship] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [idInternship, setIdInternship] = useState(null);
     const [isOpenModalConfirmDelete, setIsOpenModalConfirmDelete] = useState(false);
@@ -23,6 +27,33 @@ const ListInternship = () => {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+
+    const handleChangeValueSearch = (name, value) => {
+        setSearch((val) => ({
+            ...val,
+            [name]: value.target.value
+        }));
+    }
+
+    const handleCloseAlert = () => {
+        setObjAlert({ isOpen: false, message: '' });
+    };
+
+    const handleSearchListInternship = async () => {
+        try {
+            setIsLoading(true);
+            const res = await InternshipService.getSearchListInternship(search);
+            const data = res.data.map((internship) => ({
+                ...internship,
+            }))
+            console.log(data)
+            setInternships(data);
+        } catch (error) {
+            setObjAlert({ isOpen: true, message: error.message, type: "error" });
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     const handleClick = (event, id) => {
         setIdInternship(id);
@@ -38,8 +69,16 @@ const ListInternship = () => {
         setIsOpenModalAddInternship(true);
     }
 
+    const showModalUpdateStudent = () => {
+        const intern = internships.find(({id}) => id === idInternship);
+        setInternship(intern);
+        handleClose();
+        setIsOpenModalAddInternship(true);
+    }
+
     const closeModalAddStudent = () => {
         setIdInternship(null);
+        setInternship({});
         setIsOpenModalAddInternship(false);
     }
 
@@ -50,7 +89,7 @@ const ListInternship = () => {
 
     const handleViewDetailStudent = () => {
         if (idInternship) {
-            navigate("/list-teacher/detail/" + idInternship);
+            navigate("/internship/detail/" + idInternship);
         }
     }
 
@@ -71,7 +110,7 @@ const ListInternship = () => {
         }
     }
 
-    const headers = ["STT", "Name", "Address", "Teacher", "Start day", "End day", "Action"];
+    const headers = ["STT", "Name", "Address", "Teacher", "Course", "Start day", "End day", "Action"];
 
     const renderDataTable = () => {
         return internships.slice((page - 1) * countElementInPage, countElementInPage * page).map(internship => {
@@ -80,6 +119,7 @@ const ListInternship = () => {
                 name: internship.nameInternShip,
                 address: internship.address,
                 teacher: internship.teacherName,
+                course: internship.courseInternShip,
                 startDay: internship.startDay,
                 endDay: internship.endDay,
                 status: (
@@ -122,15 +162,15 @@ const ListInternship = () => {
                 <div className="h-full w-full body-content overflow-hidden">
                     <h4 className='mx-10 border-b border-primary font-bold text-primary text-xl mt-2'>Filter:</h4>
                     <div className='flex gap-5 mt-2 mx-10 mb-5'>
-                        <TextField className='w-full' label="Name:" variant="outlined" />
-                        <TextField className='w-full' label="Class:" variant="outlined" />
-                        <TextField className='w-full' label="School year:" variant="outlined" />
-                        <button className='btn btn-primary w-[420px] text-xl'>Search</button>
+                        <TextField className='w-full' label="Name:" onChange={(val) => handleChangeValueSearch("nameInternship", val)} variant="outlined" />
+                        <TextField className='w-full' label="Course:" onChange={(val) => handleChangeValueSearch("courseInternship", val)} variant="outlined" />
+                        <TextField className='w-full' label="Teacher:" onChange={(val) => handleChangeValueSearch("nameTeacher", val)} variant="outlined" />
+                        <button className='btn btn-primary w-[420px] text-xl' onClick={handleSearchListInternship}>Search</button>
                     </div>
                     <div className='px-10 w-full h-[430px] overflow-hidden'>
                         <TableGeneral headers={headers} body={renderDataTable()} />
                     </div>
-                    <div className='mt-2 px-10 flex justify-end'><Pagination onChange={handleChangePanigation} page={page} count={Math.ceil((internships.length + 1) / countElementInPage)} color="primary" showFirstButton showLastButton /></div>
+                    <div className='mt-2 px-10 flex justify-end'><Pagination onChange={handleChangePanigation} page={page} count={Math.ceil(internships.length / countElementInPage)} color="primary" showFirstButton showLastButton /></div>
                 </div>
             </div>
             <Menu
@@ -141,7 +181,7 @@ const ListInternship = () => {
                 <MenuItem onClick={handleViewDetailStudent}>
                     <div className='flex'><MdOutlineRemoveRedEye size={25} className='text-primary' /> <div className='w-20 px-4'>Detail</div></div>
                 </MenuItem>
-                <MenuItem onClick={showModalAddStudent}>
+                <MenuItem onClick={showModalUpdateStudent}>
                     <div className='flex'><MdEdit size={25} className='text-yellow-700' /> <div className='w-20 px-4'>Update</div></div>
                 </MenuItem>
                 <MenuItem onClick={handleConfirmDeleteStudent}>
@@ -155,10 +195,11 @@ const ListInternship = () => {
                 handleClose={handleCloseModalConfirmDelete} />
             {isOpenModalAddInternship && <FormInternship
                 isOpen={isOpenModalAddInternship}
-                idInternship={idInternship}
+                internship={internship}
                 handleClose={closeModalAddStudent}
             />}
             {isLoading && <Loading />}
+            {objAlert.isOpen && <ModalAlert {...objAlert} handleClose={handleCloseAlert} />}
         </div>
     )
 }
