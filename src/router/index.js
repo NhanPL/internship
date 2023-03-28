@@ -16,10 +16,14 @@ import ListTeacher from '../components/list_teacher/ListTeacher';
 import Login from '../components/login/Login';
 import PageNotFound from '../components/page_not_found/PageNotFound';
 import Statistical from '../components/statistical/Statistical';
+import StudentAttendance from '../components/student_attendance/StudentAttendance';
+import StudentInternship from '../components/student_internship/StudentInternship';
+import StudentReport from '../components/student_report/StudentReport';
+import StudentResult from '../components/student_result/StudentResult';
+import PrivateRoute from './PrivateRoute';
 
 function RouterComponent() {
-    const { token } = useSelector((state) => state.auth);
-
+    const { token, role } = useSelector((state) => state.auth);
     const renderRoutePublic = () => (
         <>
             <Route path='/' element={<Login />} />
@@ -30,16 +34,47 @@ function RouterComponent() {
     const renderRoutePrivite = () => {
         return (
             <Route path='/' element={<GlobalNavigation />}>
-                <Route path='/' element={<Home />}></Route>
-                <Route path='/info-detail' element={<InfoDetail />}></Route>
-                <Route path='/list-student' element={<ListStudent />}></Route>
-                <Route path='/list-student/detail/:id' element={<DetailStudent />}></Route>
-                <Route path='/teacher' element={<ListTeacher />}></Route>
-                <Route path='/list-teacher/detail/:id' element={<DetailTeacher />}></Route>
-                <Route path='/internship' element={<ListInternship />}></Route>
-                <Route path='/internship/detail/:id' element={<DetailInternship />}></Route>
-                <Route path='/statistical' element={<Statistical />}></Route>
+                <Route path='/' element={<PrivateRoute><Home /></PrivateRoute>} />
+                <Route path='/info-detail' element={<PrivateRoute><InfoDetail /></PrivateRoute>} />
+                {role === "MANAGER" ? renderRouteManager() : role === "STUDENT" ? renderRouteStudent() : renderRouteTeacher()}
             </Route>
+        )
+    }
+
+    const renderRouteManager = () => {
+        return (
+            <>
+                <Route path='/list-student' element={<PrivateRoute><ListStudent /></PrivateRoute>} />
+                <Route path='/list-student/detail/:id' element={<PrivateRoute><DetailStudent /></PrivateRoute>} />
+                <Route path='/teacher' element={<PrivateRoute><ListTeacher /></PrivateRoute>} />
+                <Route path='/list-teacher/detail/:id' element={<PrivateRoute><DetailTeacher /></PrivateRoute>} />
+                <Route path='/internship' element={<PrivateRoute><ListInternship /></PrivateRoute>} />
+                <Route path='/internship/detail/:id' element={<PrivateRoute><DetailInternship /></PrivateRoute>} />
+                <Route path='/statistical' element={<PrivateRoute><Statistical /></PrivateRoute>} />
+            </>
+        )
+    }
+    const renderRouteStudent = () => {
+        return (
+            <>
+                <Route path='/student/internship' element={<PrivateRoute><StudentInternship /></PrivateRoute>} />
+                <Route path='/student/attendance' element={<PrivateRoute><StudentAttendance /></PrivateRoute>} />
+                <Route path='/student/report' element={<PrivateRoute><StudentReport /></PrivateRoute>} />
+                <Route path='/student/result' element={<PrivateRoute><StudentResult /></PrivateRoute>} />
+            </>
+        )
+    }
+    const renderRouteTeacher = () => {
+        return (
+            <>
+                <Route path='/list-student' element={<PrivateRoute><ListStudent /></PrivateRoute>} />
+                <Route path='/list-student/detail/:id' element={<PrivateRoute><DetailStudent /></PrivateRoute>} />
+                <Route path='/teacher' element={<PrivateRoute><ListTeacher /></PrivateRoute>} />
+                <Route path='/list-teacher/detail/:id' element={<PrivateRoute><DetailTeacher /></PrivateRoute>} />
+                <Route path='/internship' element={<PrivateRoute><ListInternship /></PrivateRoute>} />
+                <Route path='/internship/detail/:id' element={<PrivateRoute><DetailInternship /></PrivateRoute>} />
+                <Route path='/statistical' element={<PrivateRoute><Statistical /></PrivateRoute>} />
+            </>
         )
     }
 

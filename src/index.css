@@ -23,7 +23,11 @@
     }
 
     .btn-primary {
-        @apply bg-primary text-white
+        @apply bg-primary text-white disabled:bg-blue-600
+    }
+
+    .btn-danger {
+        @apply bg-red-600 text-white disabled:bg-red-500
     }
 
     .btn-secondary {

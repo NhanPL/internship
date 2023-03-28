@@ -37,7 +37,6 @@ const ListStudent = () => {
                 }))
                 setStudents(data);
             }
-            console.log(studentResult)
         } catch (error) {
             setObjAlert({ isOpen: true, message: error.message, type: "error" });
         } finally {

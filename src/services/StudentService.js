@@ -1,5 +1,5 @@
-import https from "../https/httpHandle";
 import { ConstanstAPI } from "../constant/APIContanst";
+import https from "../https/httpHandle";
 
 const StudentService = {
     getListStudent: async () => {
@@ -74,12 +74,77 @@ const StudentService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
-    createEvaluateStudent: async(data) => {
+    createEvaluateStudent: async (data) => {
         try {
             const result = await https({
                 method: ConstanstAPI.CREATE_EVALUATE_STUDENT.method,
                 url: ConstanstAPI.CREATE_EVALUATE_STUDENT.url,
                 data: data
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
+    getListAttendanceByStudent: async (id) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.GET_LIST_ATTENDANCE_STUDENT.method,
+                url: ConstanstAPI.GET_LIST_ATTENDANCE_STUDENT.url + '/' + id,
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
+    getReportByStudent: async (id) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.GET_REPORT_STUDENT.method,
+                url: ConstanstAPI.GET_REPORT_STUDENT.url + '/' + id,
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
+    addReportByStudent: async (id, data) => {
+        try {
+            const dataStudent = await https({
+                method: ConstanstAPI.GET_INFO_STUDENT.method,
+                url: ConstanstAPI.GET_INFO_STUDENT.url + '/' + id,
+            })
+            const idIntershipStudent = dataStudent.data.idIntershipStudent;
+            const formData = new FormData();
+            formData.append('file', data[0]);
+            const result = await https.post(ConstanstAPI.POST_REPORT_STUDENT.url + '/' + idIntershipStudent,
+                formData,
+                {
+                    headers: {
+                        "Content-type": 'multipart/form-data'
+                    }
+                });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
+    deleteReportByStudent: async (id) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.DELETE_REPORT_STUDENT.method,
+                url: ConstanstAPI.DELETE_REPORT_STUDENT.url + '/' + id,
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
+    addAttendanceStudent: async (id) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.GET_ATTENDANCE_STUDENT.method,
+                url: ConstanstAPI.GET_ATTENDANCE_STUDENT.url + '/' + id,
             });
             return result;
         } catch (err) {

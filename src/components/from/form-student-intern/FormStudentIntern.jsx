@@ -136,7 +136,7 @@ const FormStudentIntern = ({ isOpen, student, handleClose }) => {
                                             >
                                                 {internships.map((intern, index) =>
                                                     <MenuItem key={index} value={intern.id} onClick={() => { setIdInternshipSelected(intern.id) }}>
-                                                        K{intern.courseInternship} - {intern.nameInternship} - {intern.address}
+                                                        K{intern.courseInternShip} - {intern.nameInternShip} - {intern.teacherName}
                                                     </MenuItem>)}
 
                                             </Select>

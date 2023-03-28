@@ -107,6 +107,26 @@ export const ConstanstAPI = {
         url: "http://localhost:8080/student/evaluate",
         method: "GET"
     },
+    GET_REPORT_STUDENT: {
+        url: "http://localhost:8080/student/report",
+        method: "GET"
+    },
+    POST_REPORT_STUDENT: {
+        url: "http://localhost:8080/student/report",
+        method: "POST"
+    },
+    DELETE_REPORT_STUDENT: {
+        url: "http://localhost:8080/student/report",
+        method: "DELETE"
+    },
+    GET_ATTENDANCE_STUDENT: {
+        url: "http://localhost:8080/student/attendance",
+        method: "GET"
+    },
+    GET_LIST_ATTENDANCE_STUDENT: {
+        url: "http://localhost:8080/student/attendance/list",
+        method: "GET"
+    },
     CREATE_EVALUATE_STUDENT: {
         url: "http://localhost:8080/teacher/evaluate/create",
         method: "POST"

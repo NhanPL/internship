@@ -5,13 +5,12 @@ const https = axios.create();
 // Add a request interceptor
 https.interceptors.request.use(function (config) {
   const token = localStorage.getItem("token");
-  const newConfig = config;
-  newConfig.headers = {
+  config.headers = {
     "access-control-allow-origin": "*",
-    "Content-type": "application/json; charset=UTF-8",
+    "Content-type": config.headers["Content-Type"] ? config.headers["Content-Type"] : "application/json; charset=UTF-8",
     "Authorization": token ? `Bearer ${token}` : null,
   }
-  return newConfig;
+  return config;
 }, function (error) {
   // Do something with request error
   return Promise.reject(error);

@@ -5,6 +5,7 @@ const initialState = {
     token: localStorage.getItem("token"),
     name: localStorage.getItem("lastName"),
     id: localStorage.getItem("idUser"),
+    idStudentTeacher: localStorage.getItem("idStudentTeacher"),
     imgUrl: localStorage.getItem("imgUrl"),
     role: localStorage.getItem("role"),
     isLoading: false,
@@ -52,6 +53,8 @@ export const authSlice = createSlice({
             })
             .addCase(fetchInfoAccount.fulfilled, (state, action) => {
                 localStorage.setItem("imgUrl", action.payload.avatar);
+                localStorage.setItem("idStudentTeacher", action.payload.id);
+                state.idStudentTeacher = action.payload.id;
                 state.isLoading = false;
                 state.imgUrl = action.payload.avatar;
             })
