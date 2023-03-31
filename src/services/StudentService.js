@@ -50,15 +50,15 @@ const StudentService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
-    getStatistical: async () => {
+    getStatistical: async (data) => {
         try {
             const result = await https({
                 method: ConstanstAPI.GET_DATA_STATISTICAL.method,
                 url: ConstanstAPI.GET_DATA_STATISTICAL.url,
+                data: data
             });
             return result;
         } catch (err) {
-            console.log(err.toJSON())
             return { status: err.response?.status, data: err.response?.data?.message }
         }
     },

@@ -149,7 +149,7 @@ export const ConstanstAPI = {
     },
     GET_DATA_STATISTICAL: {
         url: "http://localhost:8080/manager/statistical",
-        method: "GET"
+        method: "POST"
     },
 }
 
