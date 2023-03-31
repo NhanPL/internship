@@ -14,19 +14,19 @@ const Sidebar = ({ isShowMenu }) => {
                         role === "MANAGER" && <>
                             <NavLink to={'/teacher'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
                                 <MdAccountBox size={30} />
-                                <span className='pl-5 text-xl sidebar-text'>Quan ly giao vien</span>
+                                <span className='pl-3 text-lg sidebar-text'>Manager Teacher</span>
                             </NavLink>
                             <NavLink to={'/list-student'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
                                 <MdSchool size={30} />
-                                <span className='pl-5 text-xl sidebar-text'>Quan ly sinh vien</span>
+                                <span className='pl-3 text-lg sidebar-text'>Manager Student</span>
                             </NavLink>
                             <NavLink to={'/internship'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
                                 <MdLocationCity size={30} />
-                                <span className='pl-5 text-xl sidebar-text'>Quan ly thuc tap</span>
+                                <span className='pl-3 text-lg sidebar-text'>Manager Internship</span>
                             </NavLink>
                             <NavLink to={'/statistical'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
                                 <MdOutlineInsertChartOutlined size={30} />
-                                <span className='pl-5 text-xl sidebar-text'>Thong ke</span>
+                                <span className='pl-3 text-lg sidebar-text'>Statistical</span>
                             </NavLink>
                         </>
                     }
@@ -34,27 +34,27 @@ const Sidebar = ({ isShowMenu }) => {
                         role === "STUDENT" && <>
                             <NavLink to={'/student/internship'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
                                 <MdOutlineMapsHomeWork size={30} />
-                                <span className='pl-5 text-xl sidebar-text whitespace-nowrap'>Manager internship</span>
+                                <span className='pl-3 text-lg sidebar-text whitespace-nowrap'>Manager internship</span>
                             </NavLink>
                             <NavLink to={'/student/attendance'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
                                 <MdCalendarToday size={30} />
-                                <span className='pl-5 text-xl sidebar-text'>Attendace</span>
+                                <span className='pl-3 text-lg sidebar-text'>Attendace</span>
                             </NavLink>
                             <NavLink to={'/student/report'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
                                 <MdMoveToInbox size={30} />
-                                <span className='pl-5 text-xl sidebar-text'>Submit Report</span>
+                                <span className='pl-3 text-lg sidebar-text'>Submit Report</span>
                             </NavLink>
                             <NavLink to={'/student/result'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
                                 <MdFindInPage size={30} />
-                                <span className='pl-5 text-xl sidebar-text'>Check Result</span>
+                                <span className='pl-3 text-lg sidebar-text'>Check Evaluate</span>
                             </NavLink>
                         </>
                     }
                     {
                         role === "TEACHER" && <>
-                            <NavLink to={'/teacher'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
+                            <NavLink to={'/teacher/internship'} className="flex items-center text-white py-4 hover:bg-blue-400 pl-5 pr-2">
                                 <MdAccountBox size={30} />
-                                <span className='pl-5 text-xl sidebar-text'>Quan ly sinh vien</span>
+                                <span className='pl-3 text-lg sidebar-text'>Manager Internship</span>
                             </NavLink>
                         </>
                     }

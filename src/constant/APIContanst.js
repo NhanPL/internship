@@ -7,6 +7,10 @@ export const ConstanstAPI = {
         url: "http://localhost:8080/auth/password",
         method: "POST"
     },
+    FORGET_PASSWORD: {
+        url: "http://localhost:8080/auth/forgetpassword",
+        method: "POST"
+    },
     INFO_ACCOUNT_STUDENT: {
         url: "http://localhost:8080/student",
         method: "GET"
@@ -79,6 +83,10 @@ export const ConstanstAPI = {
         url: "http://localhost:8080/manager/teacher",
         method: "GET"
     },
+    GET_LIST_INTERNSHIP_TEACHER: {
+        url: "http://localhost:8080/teacher/listInternship",
+        method: "GET"
+    },
     INSERT_TEACHER: {
         url: "http://localhost:8080/manager/teacher",
         method: "POST"
@@ -109,6 +117,10 @@ export const ConstanstAPI = {
     },
     GET_REPORT_STUDENT: {
         url: "http://localhost:8080/student/report",
+        method: "GET"
+    },
+    DOWNLOAD_REPORT_STUDENT: {
+        url: "http://localhost:8080/teacher/report/download",
         method: "GET"
     },
     POST_REPORT_STUDENT: {

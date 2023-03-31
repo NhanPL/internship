@@ -129,6 +129,20 @@ const StudentService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
+    downloadFileReportByStudent: async (id) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.DOWNLOAD_REPORT_STUDENT.method,
+                url: ConstanstAPI.DOWNLOAD_REPORT_STUDENT.url + '/' + id,
+                headers: {
+                    responseType: 'blob',
+                }
+            })
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
     deleteReportByStudent: async (id) => {
         try {
             const result = await https({

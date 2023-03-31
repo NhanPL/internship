@@ -20,6 +20,7 @@ import StudentAttendance from '../components/student_attendance/StudentAttendanc
 import StudentInternship from '../components/student_internship/StudentInternship';
 import StudentReport from '../components/student_report/StudentReport';
 import StudentResult from '../components/student_result/StudentResult';
+import TeacherInternship from '../components/teacher_internship/TeacherInternship';
 import PrivateRoute from './PrivateRoute';
 
 function RouterComponent() {
@@ -67,13 +68,9 @@ function RouterComponent() {
     const renderRouteTeacher = () => {
         return (
             <>
-                <Route path='/list-student' element={<PrivateRoute><ListStudent /></PrivateRoute>} />
+                <Route path='/teacher/internship' element={<PrivateRoute><TeacherInternship /></PrivateRoute>} />
+                <Route path='/teacher/internship/:id' element={<PrivateRoute><DetailInternship /></PrivateRoute>} />
                 <Route path='/list-student/detail/:id' element={<PrivateRoute><DetailStudent /></PrivateRoute>} />
-                <Route path='/teacher' element={<PrivateRoute><ListTeacher /></PrivateRoute>} />
-                <Route path='/list-teacher/detail/:id' element={<PrivateRoute><DetailTeacher /></PrivateRoute>} />
-                <Route path='/internship' element={<PrivateRoute><ListInternship /></PrivateRoute>} />
-                <Route path='/internship/detail/:id' element={<PrivateRoute><DetailInternship /></PrivateRoute>} />
-                <Route path='/statistical' element={<PrivateRoute><Statistical /></PrivateRoute>} />
             </>
         )
     }

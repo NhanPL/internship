@@ -1,6 +1,6 @@
 import { Menu, MenuItem } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { MdDeleteForever, MdEdit, MdOutlineMoreHoriz } from 'react-icons/md';
+import { MdDeleteForever, MdEdit, MdOutlineMoreHoriz, MdOutlineRemoveRedEye } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
 import TableGeneral from "../../shared/table_general/TableGeneral";
 import FormInternship from "../from/form-internship/FormInternship";
@@ -8,16 +8,18 @@ import InternshipService from '../../services/InternshipService';
 import Loading from '../../shared/loading/Loading';
 import ModalAlert from '../../shared/modal-alert/ModalAlert';
 import ModalConfirm from '../../shared/modal_confirm/ModalConfirm';
+import { useSelector } from 'react-redux';
 
 const DetailInternship = () => {
     const { id } = useParams();
-    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [student, setStudent] = useState({});
     const [infoInternship, setInfoInternship] = useState({});
     const [objAlert, setObjAlert] = useState({ isOpen: false, message: '', type: null });
     const [isOpenFormInternship, setIsOpenFormInternship] = useState(false);
     const [isOpenConfirmDelete, setIsOpenConfirmDelete] = useState({ isOpen: false, content: "", type: "" });
+    const navigate = useNavigate();
+    const { role } = useSelector(state => state.auth);
 
     const headers = ["MSSV", "Name", "Email", "Gender", "Phone", "Class", "Course", "Action"];
 
@@ -88,9 +90,9 @@ const DetailInternship = () => {
     }
 
     const handleConfirmModalDelete = () => {
-        if(isOpenConfirmDelete.type==="INTERNSHIP") {
+        if (isOpenConfirmDelete.type === "INTERNSHIP") {
             deleteInternship();
-        }else {
+        } else {
             deleteStudentFormInternship();
         }
     }
@@ -109,7 +111,7 @@ const DetailInternship = () => {
         try {
             handleClickToggleModalConfirmDelete(false);
             const res = await InternshipService.deleteInternshipStudent(student.idIntershipStudent);
-            if(res.status !== 200) {
+            if (res.status !== 200) {
                 setObjAlert({ isOpen: true, message: "Can't delete internship student!", type: "error" });
             }
         } catch (error) {
@@ -142,7 +144,10 @@ const DetailInternship = () => {
             <div className="w-full h-full flex flex-col bg-white rounded shadow overflow-hidden">
                 <div className='flex bg-gray-700 justify-between shadow-md items-center shadow-gray-200 pr-4'>
                     <h2 className='text-white font-bold text-3xl pb-1 pl-5 uppercase'>DETAIL INTERNSHIP</h2>
-                    <MdOutlineMoreHoriz onClick={handleClick} size={25} className='text-gray-50 hover:cursor-pointer hover:bg-gray-600 rounded-full' />
+                    {
+                        role === "MANAGER"
+                        && <MdOutlineMoreHoriz onClick={handleClick} size={25} className='text-gray-50 hover:cursor-pointer hover:bg-gray-600 rounded-full' />
+                    }
                     <Menu
                         anchorEl={anchorEl}
                         open={open}
@@ -200,11 +205,14 @@ const DetailInternship = () => {
                 onClose={handleCloseStudent}
             >
                 <MenuItem onClick={navigateDetailStudent}>
-                    <div className='flex'><MdEdit size={25} className='text-primary' /> <div className='px-4'>Detail Student</div></div>
+                    <div className='flex'><MdOutlineRemoveRedEye size={25} className='text-primary' /> <div className='px-4'>Detail Student</div></div>
                 </MenuItem>
-                <MenuItem onClick={() => handleClickToggleModalConfirmDelete(true, "Are you sure to remove this student from the internship?", "STUDENT")}>
-                    <div className='flex'><MdDeleteForever size={25} className='text-red-500' /> <div className='px-4'>Delete</div></div>
-                </MenuItem>
+                {
+                    role === "MANAGER"
+                    && <MenuItem onClick={() => handleClickToggleModalConfirmDelete(true, "Are you sure to remove this student from the internship?", "STUDENT")}>
+                        <div className='flex'><MdDeleteForever size={25} className='text-red-500' /> <div className='px-4'>Delete</div></div>
+                    </MenuItem>
+                }
             </Menu>
             {isOpenFormInternship && <FormInternship isOpen={isOpenFormInternship} internship={infoInternship} handleClose={() => handleClickOpenUpdateInternship(false)} />}
             <ModalConfirm

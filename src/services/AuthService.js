@@ -28,6 +28,18 @@ const AuthService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
+    forgetPassword: async (data) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.FORGET_PASSWORD.method,
+                url: ConstanstAPI.FORGET_PASSWORD.url,
+                data: data
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
     getInfoStudent: async (id) => {
         try {
             const result = await https.get(ConstanstAPI.INFO_ACCOUNT_STUDENT.url + '/' + id);

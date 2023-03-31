@@ -11,6 +11,7 @@ import StudentService from '../../services/StudentService';
 import Loading from '../../shared/loading/Loading';
 import ModalAlert from '../../shared/modal-alert/ModalAlert';
 import InternshipService from '../../services/InternshipService';
+import { useSelector } from 'react-redux';
 
 const DetailStudent = () => {
     const { id } = useParams();
@@ -22,6 +23,7 @@ const DetailStudent = () => {
     const [isOpenFormStudentInternship, setIsOpenFormStudentInternship] = useState(false);
     const [isOpenFormEvaluate, setIsOpenFormEvaluate] = useState(false);
     const [isOpenConfirmDelete, setIsOpenConfirmDelete] = useState(false);
+    const { role } = useSelector(state => state.auth);
 
     const handleClickOpenUpdateStudent = (isOpen) => {
         setIsOpenFormStudent(isOpen);
@@ -38,7 +40,17 @@ const DetailStudent = () => {
         handleClose();
     }
 
-    const handleDownloadReportFile = () => {
+    const handleDownloadReportFile = async () => {
+        const res = await StudentService.downloadFileReportByStudent(infoStudent.idReport);
+        console.log(typeof res);
+        // const file = new Blob(res);
+        const url = window.URL.createObjectURL(new Blob([res]));
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.href = url;
+        a.download = `${infoStudent.id}.docx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
         handleClose();
     }
 
@@ -125,21 +137,26 @@ const DetailStudent = () => {
                         open={open}
                         onClose={handleClose}
                     >
-                        <MenuItem onClick={() => handleClickOpenUpdateStudent(true)}>
-                            <div className='flex'><MdEdit size={25} className='text-primary' /> <div className='px-4'>Update Info</div></div>
-                        </MenuItem>
-                        <MenuItem onClick={() => handleClickOpenUpdateStudentInternship(true)}>
-                            <div className='flex'><MdMenuBook size={25} className='text-primary' /> <div className='px-4'>Update Internship</div></div>
-                        </MenuItem>
+                        {role === "MANAGER" && <>
+                            <MenuItem onClick={() => handleClickOpenUpdateStudent(true)}>
+                                <div className='flex'><MdEdit size={25} className='text-primary' /> <div className='px-4'>Update Info</div></div>
+                            </MenuItem>
+                            <MenuItem onClick={() => handleClickOpenUpdateStudentInternship(true)}>
+                                <div className='flex'><MdMenuBook size={25} className='text-primary' /> <div className='px-4'>Update Internship</div></div>
+                            </MenuItem>
+                        </>}
                         <MenuItem onClick={() => handleClickOpenUpdateEvaluate(true)}>
                             <div className='flex'><MdOutlineRemoveRedEye size={25} className='text-primary' /> <div className='px-4'>Update Result</div></div>
                         </MenuItem>
                         <MenuItem disabled={!infoStudent.idReport} onClick={handleDownloadReportFile}>
                             <div className='flex'><MdFileDownload size={25} className='text-primary' /> <div className='px-4'>Download Report File</div></div>
                         </MenuItem>
-                        <MenuItem onClick={() => handleClickToggleModalConfirmDelete(true)}>
-                            <div className='flex'><MdDeleteForever size={25} className='text-red-500' /> <div className='px-4'>Delete</div></div>
-                        </MenuItem>
+                        {
+                            role === "MANAGER" &&
+                            <MenuItem onClick={() => handleClickToggleModalConfirmDelete(true)}>
+                                <div className='flex'><MdDeleteForever size={25} className='text-red-500' /> <div className='px-4'>Delete</div></div>
+                            </MenuItem>
+                        }
                     </Menu>
                 </div>
                 <div className="h-full flex pt-4 pb-8 overflow-hidden">

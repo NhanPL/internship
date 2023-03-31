@@ -36,6 +36,17 @@ const TeacherService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
+    getListInternshipByTeacher: async (id) => {
+        try {
+            const result = await https({
+                method: ConstanstAPI.GET_LIST_INTERNSHIP_TEACHER.method,
+                url: ConstanstAPI.GET_LIST_INTERNSHIP_TEACHER.url + '/' + id,
+            });
+            return result;
+        } catch (err) {
+            return { status: err.response.status, data: err.response.data?.message }
+        }
+    },
     createTeacher: async (data) => {
         try {
             const result = await https({
