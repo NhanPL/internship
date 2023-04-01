@@ -129,15 +129,24 @@ const StudentService = {
             return { status: err.response.status, data: err.response.data?.message }
         }
     },
-    downloadFileReportByStudent: async (id) => {
+    downloadFileReportByStudent: async (id, filename) => {
         try {
             const result = await https({
                 method: ConstanstAPI.DOWNLOAD_REPORT_STUDENT.method,
                 url: ConstanstAPI.DOWNLOAD_REPORT_STUDENT.url + '/' + id,
-                headers: {
-                    responseType: 'blob',
-                }
-            })
+                responseType: "blob"
+            }).then((response) => {
+                const blob = new Blob([response]);
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                URL.revokeObjectURL(url);
+            }).catch((error) => {
+                console.log(error);
+            });
             return result;
         } catch (err) {
             return { status: err.response.status, data: err.response.data?.message }

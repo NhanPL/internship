@@ -41,16 +41,8 @@ const DetailStudent = () => {
     }
 
     const handleDownloadReportFile = async () => {
-        const res = await StudentService.downloadFileReportByStudent(infoStudent.idReport);
-        console.log(typeof res);
-        // const file = new Blob(res);
-        const url = window.URL.createObjectURL(new Blob([res]));
-        const a = document.createElement("a");
-        document.body.appendChild(a);
-        a.href = url;
-        a.download = `${infoStudent.id}.docx`;
-        a.click();
-        window.URL.revokeObjectURL(url);
+        console.log(infoStudent)
+        await StudentService.downloadFileReportByStudent(infoStudent.idReport, infoStudent.filename);
         handleClose();
     }
 
@@ -102,6 +94,13 @@ const DetailStudent = () => {
                             addressInternship: resIntershipStudent.data.internship.address,
                         };
                     }
+                    if(resStudent.data.idReport) {
+                        const resReport = await StudentService.getReportByStudent(resStudent.data.id);
+                        response = {
+                            ...response,
+                            filename: resReport.data.name,
+                        }
+                    }
                     const resEvaluate = await StudentService.getEvaluateStudent(resStudent.data.id);
                     if (resEvaluate.status === 200) {
                         response = {
@@ -137,14 +136,16 @@ const DetailStudent = () => {
                         open={open}
                         onClose={handleClose}
                     >
-                        {role === "MANAGER" && <>
+                        {role === "MANAGER" &&
                             <MenuItem onClick={() => handleClickOpenUpdateStudent(true)}>
                                 <div className='flex'><MdEdit size={25} className='text-primary' /> <div className='px-4'>Update Info</div></div>
                             </MenuItem>
+                        }
+                        {role === "MANAGER" &&
                             <MenuItem onClick={() => handleClickOpenUpdateStudentInternship(true)}>
                                 <div className='flex'><MdMenuBook size={25} className='text-primary' /> <div className='px-4'>Update Internship</div></div>
                             </MenuItem>
-                        </>}
+                        }
                         <MenuItem onClick={() => handleClickOpenUpdateEvaluate(true)}>
                             <div className='flex'><MdOutlineRemoveRedEye size={25} className='text-primary' /> <div className='px-4'>Update Result</div></div>
                         </MenuItem>

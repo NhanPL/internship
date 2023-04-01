@@ -9,8 +9,10 @@ https.interceptors.request.use(function (config) {
     "access-control-allow-origin": "*",
     "Content-type": config.headers["Content-Type"] ? config.headers["Content-Type"] : "application/json; charset=UTF-8",
     "Authorization": token ? `Bearer ${token}` : null,
-    "responseType": config.headers["responseType"],
   }
+  // if (config.headers["responseType"]) {
+  //   config.responseType = config.headers["responseType"];
+  // }
   return config;
 }, function (error) {
   // Do something with request error
