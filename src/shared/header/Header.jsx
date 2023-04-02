@@ -1,25 +1,27 @@
 import { Menu, MenuItem } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { MdOutlineExpandMore } from 'react-icons/md';
+import { MdEdit, MdManageAccounts, MdOutlineExpandMore, MdOutlineLogout, MdPassword } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import AvatarManager from "../../assets/avatar_manager.png";
 import FormChangePassword from '../../components/from/form-change-password/FormChangePassword';
+import FormStudent from "../../components/from/form-student/FormStudent";
+import FormTeacher from "../../components/from/form-teacher/FormTeacher";
 import { fetchInfoAccount } from '../../redux/auth/AuthAction';
 import { logout } from '../../redux/auth/AuthReducer';
 import ModalConfirm from '../modal_confirm/ModalConfirm';
 
 const Header = () => {
     const [isOpenConfirm, setIsOpenConfirm] = useState(false);
+    const [isOpenUpdateInfo, setIsOpenUpdateInfo] = useState(false);
     const [isOpenModalChangePassword, setIsOpenModalChangePassword] = useState(false);
-    const { imgUrl, name, role } = useSelector((state) => state.auth);
+    const { imgUrl, name, role, dataAccount } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(fetchInfoAccount());
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [dispatch, isOpenUpdateInfo])
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -30,6 +32,14 @@ const Header = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleOpenFormUpdate = () => {
+        setIsOpenUpdateInfo(true);
+        handleClose();
+    }
+    const handleCloseFormUpdate = () => {
+        setIsOpenUpdateInfo(false);
+    }
 
     const handleCloseModalChangePassword = () => {
         setIsOpenModalChangePassword(o => !o);
@@ -66,9 +76,10 @@ const Header = () => {
                 open={open}
                 onClose={handleClose}
             >
-                {role !== "MANAGER" && <MenuItem onClick={navigateInfoDetail} className='w-44'>My account</MenuItem>}
-                <MenuItem onClick={handleCloseModalChangePassword} className='w-44'>Change password</MenuItem>
-                <MenuItem onClick={handleOpenDialogConfirm} className='w-44'>Logout</MenuItem>
+                {role !== "MANAGER" && <MenuItem onClick={navigateInfoDetail}><MdManageAccounts size={25} className='text-primary mr-2' />My account</MenuItem>}
+                {role !== "MANAGER" && <MenuItem onClick={handleOpenFormUpdate}><MdEdit size={25} className='text-orange-600 mr-2' />Update info</MenuItem>}
+                <MenuItem onClick={handleCloseModalChangePassword}><MdPassword size={25} className='text-amber-800 mr-2' />Change password</MenuItem>
+                <MenuItem onClick={handleOpenDialogConfirm}><MdOutlineLogout size={25} className='text-red-600 mr-2' />Logout</MenuItem>
             </Menu>
             <ModalConfirm
                 isOpen={isOpenConfirm}
@@ -77,6 +88,8 @@ const Header = () => {
                 handleClose={() => setIsOpenConfirm(false)}
                 handleConfirm={logoutAccount}
             />
+            {role === "STUDENT" && <FormStudent isOpen={isOpenUpdateInfo} handleClose={handleCloseFormUpdate} student={dataAccount} isUpdateInfo />}
+            {role === "TEACHER" && <FormTeacher isOpen={isOpenUpdateInfo} handleClose={handleCloseFormUpdate} teacher={dataAccount} isUpdateInfo />}
             {isOpenModalChangePassword && <FormChangePassword isOpen={isOpenModalChangePassword} handleClose={handleCloseModalChangePassword} />}
         </div>
     )

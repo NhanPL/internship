@@ -41,7 +41,6 @@ const DetailStudent = () => {
     }
 
     const handleDownloadReportFile = async () => {
-        console.log(infoStudent)
         await StudentService.downloadFileReportByStudent(infoStudent.idReport, infoStudent.filename);
         handleClose();
     }

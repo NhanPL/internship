@@ -20,7 +20,6 @@ const Statistical = () => {
 
     const renderDataTable = () => {
         return students.slice((page - 1) * countElementInPage, countElementInPage * page).map(student => {
-            console.log(student)
             return {
                 mssv: <span className='font-bold'>SV{student.id}</span>,
                 name: student.fullname,
@@ -123,8 +122,8 @@ const Statistical = () => {
         }
     }
     useEffect(() => {
-
         getData();
+        // eslint-disable-next-line
     }, [])
 
     return (

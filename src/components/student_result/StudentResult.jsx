@@ -18,8 +18,11 @@ const StudentResult = () => {
                 if (res.status === 200) {
                     let response = {}
                     if (res.data.idIntershipStudent) {
-                        const resElevuate = await StudentService.getEvaluateStudent(id);
-                        console.log(resElevuate);
+                        const resEvaluate = await StudentService.getEvaluateStudent(id);
+                        response = {
+                            ...resEvaluate.data,
+                            idEvaluate: resEvaluate.data,
+                        }
                     }
                     response = {
                         ...response,
@@ -51,7 +54,7 @@ const StudentResult = () => {
                             : <div className='grid grid-cols-3 mb-4 px-4'>
                                 <div className='flex text-lg py-2'>
                                     <div className='w-28 font-bold'>Score:</div>
-                                    <p>{infoStudent.score ? `${infoStudent.score}Đ/100Đ` : ''}</p>
+                                    <p>{infoStudent.score ? `${infoStudent.score}/100 Đ` : ''}</p>
                                 </div>
                                 <div className='flex text-lg py-2'>
                                     <div className='w-28 font-bold'>Result:</div>

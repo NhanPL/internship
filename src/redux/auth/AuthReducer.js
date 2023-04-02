@@ -8,6 +8,7 @@ const initialState = {
     idStudentTeacher: localStorage.getItem("idStudentTeacher"),
     imgUrl: localStorage.getItem("imgUrl"),
     role: localStorage.getItem("role"),
+    dataAccount: {},
     isLoading: false,
     errMsg: "",
 };
@@ -54,6 +55,8 @@ export const authSlice = createSlice({
             .addCase(fetchInfoAccount.fulfilled, (state, action) => {
                 localStorage.setItem("imgUrl", action.payload.avatar);
                 localStorage.setItem("idStudentTeacher", action.payload.id);
+                console.log(action.payload);
+                state.dataAccount = action.payload;
                 state.idStudentTeacher = action.payload.id;
                 state.isLoading = false;
                 state.imgUrl = action.payload.avatar;

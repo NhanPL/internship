@@ -20,13 +20,12 @@ const schema = yup.object({
     department: yup.string().required("Department must be required!"),
 }).required();
 
-const FormStudent = ({ isOpen, student, handleClose }) => {
+const FormStudent = ({ isOpen, student, handleClose, isUpdateInfo = false }) => {
     useEffect(() => {
         if (isOpen === false) {
             setSrcAvatar(avatar);
         }
     }, [isOpen])
-
     const isUpdate = !checkEmptyObject(student);
     const [isLoading, setIsLoading] = useState(false);
     const [srcAvatar, setSrcAvatar] = useState(avatar);
@@ -90,14 +89,14 @@ const FormStudent = ({ isOpen, student, handleClose }) => {
 
     useEffect(() => {
         if (!checkEmptyObject(student)) {
-            setValue("fullname", student.fullname);
+            setValue("fullname", student.fullname ?? student.name);
             setValue("email", student.email);
-            setValue("dob", student.dob);
+            setValue("dob", student.dob ?? student.birthDay);
             setValue("address", student.address);
             setValue("sex", student.sex);
             setValue("phone", student.phone);
-            setValue("className", student.className);
-            setValue("year_study", student.year_study);
+            setValue("className", student.className ?? student.class_);
+            setValue("year_study", student.year_study ?? student.yearStudy);
             setValue("department", student.department);
             if (student.avatar) {
                 setValue("avatar", student.avatar);
@@ -197,7 +196,7 @@ const FormStudent = ({ isOpen, student, handleClose }) => {
                                     control={control}
                                     name="className"
                                     render={({ field }) => (
-                                        <TextField error={!!errors.className?.message} size='small' className='w-full' label="Class name:" variant="outlined" {...field} />
+                                        <TextField disabled={isUpdateInfo} error={!!errors.className?.message} size='small' className='w-full' label="Class name:" variant="outlined" {...field} />
                                     )}
                                 />
                                 <p className='text-red-600'>{errors.className?.message}</p>
@@ -208,7 +207,7 @@ const FormStudent = ({ isOpen, student, handleClose }) => {
                                         control={control}
                                         name="year_study"
                                         render={({ field }) => (
-                                            <TextField error={!!errors.year_study?.message} size='small' className='w-full' label="Course:" variant="outlined" {...field} />
+                                            <TextField disabled={isUpdateInfo} error={!!errors.year_study?.message} size='small' className='w-full' label="Course:" variant="outlined" {...field} />
                                         )}
                                     />
                                     <p className='text-red-600'>{errors.year_study?.message}</p>
@@ -218,7 +217,7 @@ const FormStudent = ({ isOpen, student, handleClose }) => {
                                         control={control}
                                         name="department"
                                         render={({ field }) => (
-                                            <TextField error={!!errors.department?.message} size='small' className='w-full' label="Department:" variant="outlined" {...field} />
+                                            <TextField disabled={isUpdateInfo} error={!!errors.department?.message} size='small' className='w-full' label="Department:" variant="outlined" {...field} />
                                         )}
                                     />
                                     <p className='text-red-600'>{errors.department?.message}</p>

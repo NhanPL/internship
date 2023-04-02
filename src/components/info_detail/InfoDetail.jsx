@@ -1,25 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import AuthService from "../../services/AuthService";
 
 const InfoDetail = () => {
 
-    const { id, role } = useSelector((state) => state.auth);
-    const [info, setInfo] = useState({});
+    const { role, dataAccount } = useSelector((state) => state.auth);
 
-    useEffect(() => {
-        const fetchDataInfo = async () => {
-            let result = {};
-            if (role === "STUDENT") {
-                result = await AuthService.getInfoStudent(id);
-            } else {
-                result = await AuthService.getInfoTeacher(id);
-            }
-            setInfo(result.data);
-        };
-
-        fetchDataInfo();
-    }, [id, role])
+    console.log(dataAccount);
 
     return (
         <div className='w-full h-full p-5'>
@@ -27,38 +13,38 @@ const InfoDetail = () => {
                 <h2 className='text-white font-bold text-3xl bg-gray-700 pb-1 pl-5 shadow-md shadow-gray-200 uppercase'>Info Detail</h2>
                 <div className="h-full body-content flex">
                     <div className='w-1/3 h-full pt-8 pl-20'>
-                        <img src={info?.avatar} alt="Avatar Account" className='w-[425px] h-[525px]' />
+                        <img src={dataAccount?.avatar} alt="Avatar Account" className='w-[425px] h-[525px]' />
                     </div>
                     <div className='w-2/3 h-full pt-8 pl-5 pr-5'>
                         <div className='bg-gray-700 text-center text-white font-bold text-xl mb-2'>Info</div>
                         <div className='grid grid-cols-2 mb-4 px-4'>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>ID:</div>
-                                <p>SV{info?.id}</p>
+                                <p>SV{dataAccount?.id}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Full Name:</div>
-                                <p>{info?.name}</p>
+                                <p>{dataAccount?.name}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Gmail:</div>
-                                <p>{info?.email}</p>
+                                <p>{dataAccount?.email}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Gender:</div>
-                                <p>{info?.sex}</p>
+                                <p>{dataAccount?.sex}</p>
                             </div>
                             <div className='flex text-lg py-2'>
                                 <div className='w-28 font-bold'>Birth Day:</div>
-                                <p>{info?.birthDay}</p>
+                                <p>{dataAccount?.birthDay}</p>
                             </div>
                             <div className='flex text-lg py-2'>
                                 <div className='w-28 font-bold'>Phone:</div>
-                                <p>{info?.phone}</p>
+                                <p>{dataAccount?.phone}</p>
                             </div>
                             <div className='flex text-lg col-span-2 py-2'>
                                 <div className='w-28 font-bold'>Address:</div>
-                                <p>{info?.address}</p>
+                                <p>{dataAccount?.address}</p>
                             </div>
                         </div>
                         {role === "STUDENT" ?
@@ -67,15 +53,15 @@ const InfoDetail = () => {
                                 <div className='grid grid-cols-2 mb-4 px-4'>
                                     <div className='flex text-lg py-2'>
                                         <div className='w-28 font-bold'>Class:</div>
-                                        <p>{info?.class_}</p>
+                                        <p>{dataAccount?.class_}</p>
                                     </div>
                                     <div className='flex text-lg py-2'>
                                         <div className='w-28 font-bold'>School year:</div>
-                                        <p>{info?.yearStudy}</p>    
+                                        <p>{dataAccount?.yearStudy}</p>    
                                     </div>
                                     <div className='flex text-lg py-2'>
                                         <div className='w-28 font-bold'>Department:</div>
-                                        <p>{info?.department}</p>
+                                        <p>{dataAccount?.department}</p>
                                     </div>
                                 </div>
                             </>)
@@ -85,15 +71,15 @@ const InfoDetail = () => {
                                 <div className='grid grid-cols-2 mb-4 px-4'>
                                     <div className='flex text-lg py-2'>
                                         <div className='w-28 font-bold'>Level:</div>
-                                        <p>{info?.level}</p>
+                                        <p>{dataAccount?.level}</p>
                                     </div>
                                     <div className='flex text-lg py-2'>
                                         <div className='w-28 font-bold'>Specialize:</div>
-                                        <p>{info?.specialize}</p>    
+                                        <p>{dataAccount?.specialize}</p>    
                                     </div>
                                     <div className='flex text-lg py-2'>
                                         <div className='w-28 font-bold'>Salary:</div>
-                                        <p>{info?.salary} VND</p>
+                                        <p>{dataAccount?.salary} VND</p>
                                     </div>
                                 </div>
                             </>)

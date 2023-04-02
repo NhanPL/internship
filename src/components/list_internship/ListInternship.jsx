@@ -46,7 +46,6 @@ const ListInternship = () => {
             const data = res.data.map((internship) => ({
                 ...internship,
             }))
-            console.log(data)
             setInternships(data);
         } catch (error) {
             setObjAlert({ isOpen: true, message: error.message, type: "error" });

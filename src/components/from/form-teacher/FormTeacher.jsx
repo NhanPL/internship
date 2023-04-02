@@ -20,7 +20,7 @@ const schema = yup.object({
     salary: yup.string().required("Salary must be required!"),
 }).required();
 
-const FormTeacher = ({ isOpen, teacher, handleClose }) => {
+const FormTeacher = ({ isOpen, teacher, handleClose, isUpdateInfo = false }) => {
     useEffect(() => {
         if (isOpen === false) {
             setSrcAvatar(avatar);
@@ -57,10 +57,8 @@ const FormTeacher = ({ isOpen, teacher, handleClose }) => {
 
     const onSubmit = (data) => {
         if (isUpdate) {
-            console.log("update")
             updateTeacher(data);
         } else {
-            console.log("insert")
             createTeacher(data);
         }
     }
@@ -204,7 +202,7 @@ const FormTeacher = ({ isOpen, teacher, handleClose }) => {
                                 <p className='text-red-600'>{errors.level?.message}</p>
                             </div>
                             <div className='flex gap-4'>
-                                <div className='pb-4 w-full'>
+                                {!isUpdateInfo && <div className='pb-4 w-full'>
                                     <Controller
                                         control={control}
                                         name="salary"
@@ -213,7 +211,7 @@ const FormTeacher = ({ isOpen, teacher, handleClose }) => {
                                         )}
                                     />
                                     <p className='text-red-600'>{errors.salary?.message}</p>
-                                </div>
+                                </div>}
                                 <div className='pb-4 w-full'>
                                     <Controller
                                         control={control}
