@@ -62,7 +62,6 @@ const FormEvaluate = ({ isOpen, id, evaluate, handleClose }) => {
     }
 
     useEffect(() => {
-        console.log(evaluate)
         if (evaluate.idEvaluate !== undefined) {
             setValue("score", evaluate.score);
             setValue("evaluateContent", evaluate.evaluateContent);

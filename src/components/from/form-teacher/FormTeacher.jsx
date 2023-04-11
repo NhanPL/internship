@@ -109,7 +109,7 @@ const FormTeacher = ({ isOpen, teacher, handleClose, isUpdateInfo = false }) => 
         <Fragment>
             <Dialog open={isOpen} onClose={handleClose} fullWidth maxWidth="md">
                 <div className='w-full flex flex-col overflow-auto'>
-                    <h2 className='modal-from-header mt-5'>Add Teacher</h2>
+                    <h2 className='modal-from-header mt-5'>{isUpdate ? "Update Teacher" : "Add Teacher"}</h2>
                     <div className='overflow-auto h-full'>
                         <form className='w-full p-6'>
                             <div className='pb-4 w-full'>
@@ -226,7 +226,7 @@ const FormTeacher = ({ isOpen, teacher, handleClose, isUpdateInfo = false }) => 
                         </form>
                     </div>
                     <div className='flex justify-center my-6 gap-5'>
-                        <button onClick={handleSubmit(onSubmit)} className="btn btn-primary w-24">Add</button>
+                        <button onClick={handleSubmit(onSubmit)} className="btn btn-primary w-24">{isUpdate ? "Update":"Add"}</button>
                         <button onClick={handleClose} className="btn btn-secondary w-24">Close</button>
                     </div>
                 </div>

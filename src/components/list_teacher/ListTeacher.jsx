@@ -72,6 +72,7 @@ const ListTeacher = () => {
 
     const closeModalAddTeacher = () => {
         setIdTeacher(null);
+        setTeacher({});
         setIsOpenModalAddTeacher(false);
     }
 
